@@ -12,6 +12,7 @@ router.all("/", wrap(async (req: express.Request, res: express.Response) => {
 router.all("/consultoria", wrap(async (req: express.Request, res: express.Response) => {
 	res.render("home/consultoria", { layout: "layout-simples" });
 }));
+
 router.all("/estruturaOrg", wrap(async (req: express.Request, res: express.Response) => {
 	res.render("home/estruturaOrg", { layout: "layout-simples" });
 }));
