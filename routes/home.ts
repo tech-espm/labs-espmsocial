@@ -9,6 +9,17 @@ router.all("/", wrap(async (req: express.Request, res: express.Response) => {
 	res.render("home/index", { layout: "layout-externo" });
 }));
 
+router.all("/consultoria", wrap(async (req: express.Request, res: express.Response) => {
+	res.render("home/consultoria", { layout: "layout-simples" });
+}));
+router.all("/estruturaOrg", wrap(async (req: express.Request, res: express.Response) => {
+	res.render("home/estruturaOrg", { layout: "layout-simples" });
+}));
+
+router.all("/aluno", wrap(async (req: express.Request, res: express.Response) => {
+	res.render("home/aluno", { layout: "layout-simples" });
+}));
+
 router.all("/login", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
 	if (!u) {
