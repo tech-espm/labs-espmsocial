@@ -126,9 +126,16 @@ app.use(wrap(async (req: express.Request, res: express.Response, next: express.N
 //if (app.get("env") === "development") {
 	app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
 		res.status(err.status || 500);
-		// Como é um ambiente de desenvolvimento, deixa o objeto do erro
-		// ir para a página, que possivelmente exibirá suas informações
-		res.render("shared/erro", { layout: "layout-externo", mensagem: err.message, erro: err });
+
+		if (req.path.indexOf("/api/") >= 0) {
+			res.json(err.status == 404 ? "Não encontrado" : (err.message || err.toString()));
+		} else if (err.status == 404) {
+			res.render("shared/erro", { layout: "layout-externo" });
+		} else {
+			// Como é um ambiente de desenvolvimento, deixa o objeto do erro
+			// ir para a página, que possivelmente exibirá suas informações
+			res.render("shared/erro", { layout: "layout-externo", mensagem: err.message, erro: err });
+		}
 
 		// Como não estamos chamando next(err) aqui, o tratador
 		// abaixo não será executado
@@ -140,8 +147,6 @@ app.use(wrap(async (req: express.Request, res: express.Response, next: express.N
 //	res.render("shared/erro", { layout: "layout-externo", mensagem: err.message, erro: {} });
 //});
 
-app.set("port", process.env.PORT || 3000);
-
-const server = app.listen(app.get("port"), process.env.IP || "127.0.0.1", () => {
+const server = app.listen(appsettings.port, process.env.IP || "127.0.0.1", () => {
 	debug("Express server listening on port " + server.address()["port"]);
 });

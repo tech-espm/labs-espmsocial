@@ -17,6 +17,7 @@ export = class Usuario {
 	public nome: string;
 	public idperfil: number;
 	public senha: string;
+	public criacao: string;
 
 	// Utilizados apenas através do cookie
 	public admin: boolean;
@@ -107,7 +108,7 @@ export = class Usuario {
 			u.idperfil = row.idperfil as number;
 			u.admin = (u.idperfil === Usuario.IdPerfilAdmin);
 
-			res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure, sameSite: "none" });
+			res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
 		});
 
 		return [r, u];
@@ -147,7 +148,7 @@ export = class Usuario {
 
 				this.nome = nome;
 
-				res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure, sameSite: "none" });
+				res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
 			} else {
 				await sql.query("update usuario set nome = ? where id = ?", [nome, this.id]);
 
@@ -170,7 +171,7 @@ export = class Usuario {
 		let lista: Usuario[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select u.id, u.login, u.nome, p.nome perfil from usuario u inner join perfil p on p.id = u.idperfil order by u.login asc") as Usuario[];
+			lista = await sql.query("select u.id, u.login, u.nome, p.nome perfil, date_format(u.criacao, '%d/%m/%Y') criacao from usuario u inner join perfil p on p.id = u.idperfil order by u.login asc") as Usuario[];
 		});
 
 		return (lista || []);
@@ -180,7 +181,7 @@ export = class Usuario {
 		let lista: Usuario[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select id, login, nome, idperfil from usuario where id = ?", [id]) as Usuario[];
+			lista = await sql.query("select id, login, nome, idperfil, date_format(criacao, '%d/%m/%Y') criacao from usuario where id = ?", [id]) as Usuario[];
 		});
 
 		return ((lista && lista[0]) || null);
@@ -197,7 +198,7 @@ export = class Usuario {
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
-				await sql.query("insert into usuario (login, nome, idperfil, senha) values (?, ?, ?, ?)", [u.login, u.nome, u.idperfil, appsettings.usuarioHashSenhaPadrao]);
+				await sql.query("insert into usuario (login, nome, idperfil, senha, criacao) values (?, ?, ?, ?, now())", [u.login, u.nome, u.idperfil, appsettings.usuarioHashSenhaPadrao]);
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {
