@@ -34,8 +34,6 @@ router.post("/criar", wrap(async (req: express.Request, res: express.Response) =
 	if (!u)
 		return;
 	u = req.body as Usuario;
-	if (u)
-		u.idperfil = parseInt(req.body.idperfil);
 	jsonRes(res, 400, u ? await Usuario.criar(u) : "Dados inválidos");
 }));
 
@@ -45,10 +43,8 @@ router.post("/alterar", wrap(async (req: express.Request, res: express.Response)
 		return;
 	let id = u.id;
 	u = req.body as Usuario;
-	if (u) {
+	if (u)
 		u.id = parseInt(req.body.id);
-		u.idperfil = parseInt(req.body.idperfil);
-	}
 	jsonRes(res, 400, (u && !isNaN(u.id)) ? (id === u.id ? "Um usuário não pode alterar a si próprio" : await Usuario.alterar(u)) : "Dados inválidos");
 }));
 

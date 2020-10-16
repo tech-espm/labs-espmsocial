@@ -1,7 +1,7 @@
 ﻿import express = require("express");
 import wrap = require("express-async-error-wrapper");
 import jsonRes = require("../../utils/jsonRes");
-import Perfil = require("../../models/perfil");
+import Cargo = require("../../models/cargo");
 import Usuario = require("../../models/usuario");
 
 const router = express.Router();
@@ -12,7 +12,7 @@ router.get("/listar", wrap(async (req: express.Request, res: express.Response) =
 	let u = await Usuario.cookie(req, res, true);
 	if (!u)
 		return;
-	res.json(await Perfil.listar());
+	res.json(await Cargo.listar());
 }));
 
 router.get("/obter", wrap(async (req: express.Request, res: express.Response) => {
@@ -20,25 +20,25 @@ router.get("/obter", wrap(async (req: express.Request, res: express.Response) =>
 	if (!u)
 		return;
 	let id = parseInt(req.query["id"]);
-	res.json(isNaN(id) ? null : await Perfil.obter(id));
+	//res.json(isNaN(id) ? null : await Cargo.obter(id));
 }));
 
 router.post("/criar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req, res, true);
 	if (!u)
 		return;
-	let p = req.body as Perfil;
-	jsonRes(res, 400, p ? await Perfil.criar(p) : "Dados inválidos");
+	//let p = req.body as Perfil;
+	//jsonRes(res, 400, p ? await Perfil.criar(p) : "Dados inválidos");
 }));
 
 router.post("/alterar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req, res, true);
 	if (!u)
 		return;
-	let p = req.body as Perfil;
-	if (p)
-		p.id = parseInt(req.body.id);
-	jsonRes(res, 400, (p && !isNaN(p.id)) ? await Perfil.alterar(p) : "Dados inválidos");
+	//let p = req.body as Perfil;
+	//if (p)
+	//	p.id = parseInt(req.body.id);
+	//jsonRes(res, 400, (p && !isNaN(p.id)) ? await Perfil.alterar(p) : "Dados inválidos");
 }));
 
 router.get("/excluir", wrap(async (req: express.Request, res: express.Response) => {
@@ -46,7 +46,7 @@ router.get("/excluir", wrap(async (req: express.Request, res: express.Response) 
 	if (!u)
 		return;
 	let id = parseInt(req.query["id"]);
-	jsonRes(res, 400, isNaN(id) ? "Dados inválidos" : await Perfil.excluir(id));
+	//jsonRes(res, 400, isNaN(id) ? "Dados inválidos" : await Perfil.excluir(id));
 }));
 
 export = router;

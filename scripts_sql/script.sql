@@ -9,7 +9,7 @@ CREATE TABLE cargo (
   UNIQUE KEY cargo_nome_UN (nome)
 );
 
-INSERT INTO cargo (nome) VALUES ('ADMINISTRADOR'), ('GERENTE'), ('MEMBRO');
+INSERT INTO cargo (nome) VALUES ('Administrador'), ('Gerente'), ('Membro');
 
 -- DROP TABLE IF EXISTS equipe;
 CREATE TABLE equipe (
@@ -19,7 +19,7 @@ CREATE TABLE equipe (
   UNIQUE KEY equipe_nome_UN (nome)
 );
 
-INSERT INTO equipe (nome) VALUES ('ADMINISTRADOR'), ('MARKETING'), ('RH');
+INSERT INTO equipe (nome) VALUES ('Administrador'), ('Marketing'), ('RH');
 
 -- DROP TABLE IF EXISTS usuario;
 CREATE TABLE usuario (
@@ -49,7 +49,7 @@ CREATE TABLE usuario (
   CONSTRAINT usuario_idequipe_FK FOREIGN KEY (idequipe) REFERENCES equipe (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-INSERT INTO usuario (login, nome, idcargo, idequipe, senha, token, criacao, email, telefone, whatsapp, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) VALUES ('ADMIN', 'ADMINISTRADOR', 1, 1, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', NULL, NOW(), '', '', '', '', '', '', 0, 0, 0, 1);
+INSERT INTO usuario (login, nome, idcargo, idequipe, senha, token, criacao, email, telefone, whatsapp, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) VALUES ('admin', 'Administrador', 1, 1, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', NULL, NOW(), '', '', '', '', '', '', 0, 0, 0, 1);
 
 -- DROP TABLE IF EXISTS historico_cargo;
 CREATE TABLE historico_cargo (
@@ -83,14 +83,23 @@ CREATE TABLE ong (
   telefone varchar(20) NOT NULL,
   endereco varchar(100) NOT NULL,
   email varchar(100) NOT NULL,
-  idcausa int NOT NULL,
   criacao datetime NOT NULL,
   ativo tinyint(4) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY ong_nome_UN (nome),
-  KEY ong_idcausa_FK_idx (idcausa),
-  KEY ong_ativo_FK_idx (ativo),
-  CONSTRAINT ong_idcausa_FK FOREIGN KEY (idcausa) REFERENCES causa (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+  KEY ong_ativo_FK_idx (ativo)
+);
+
+-- DROP TABLE IF EXISTS ong_causa;
+CREATE TABLE ong_causa (
+  id int NOT NULL AUTO_INCREMENT,
+  idong int NOT NULL,
+  idcausa int NOT NULL,
+  PRIMARY KEY (id),
+  KEY ong_causa_idong_FK_idx (idong),
+  KEY ong_causa_idcausa_FK_idx (idcausa),
+  CONSTRAINT ong_causa_idong_FK FOREIGN KEY (idong) REFERENCES ong (id) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT ong_causa_idcausa_FK FOREIGN KEY (idcausa) REFERENCES causa (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 -- DROP TABLE IF EXISTS representante;

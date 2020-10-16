@@ -61,7 +61,7 @@
 			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"<%- root %>/usuario/alterar?id=" + row.id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <button title=\"Redefinir Senha\" type=\"button\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-lock\"></i></button> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
 			{ title: "Login", "class": "col-25", render: encode, data: "login" },
 			{ title: "Nome", "class": "col-50", render: encode, data: "nome" },
-			{ title: "Perfil", "class": "col-25", render: encode, data: "perfil" },
+			{ title: "Cargo", "class": "col-25", render: encode, data: "cargo" },
 			{ title: "Criação", "class": "col-min text-right", "type": "customdateint", data: "criacao" }
 		],
 		data: <%- lista %>,

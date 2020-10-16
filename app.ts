@@ -101,7 +101,6 @@ app.use((req: express.Request, res: express.Response, next: express.NextFunction
 app.use("/", require("./routes/home"));
 app.use("/usuario", require("./routes/usuario"));
 // API
-app.use("/api/perfil", require("./routes/api/perfil"));
 app.use("/api/usuario", require("./routes/api/usuario"));
 
 // Depois de registrados todos os caminhos das rotas e seus
