@@ -15,9 +15,11 @@ export = class Representante {
 		if (r.nome.length < 3 || r.nome.length > 100)
             return "Nome inválido";
             
-        r.idong = parseInt(r.idong as any); // COLOCAR VERIFICAÇÃO DE ONG AQUI?
+        r.idong = parseInt(r.idong as any);
 		if (isNaN(r.idong))
 			return "Ong inválida";    
+
+		// email, telefone, whatsapp
 
 		return null;
 	}

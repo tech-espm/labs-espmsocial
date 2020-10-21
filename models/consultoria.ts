@@ -7,12 +7,27 @@ export = class Consultoria{
     public idong: number;
     public ano : number;
 
-    
+	private static validar(c: Consultoria): string {
+		c.idorientador = parseInt(c.idorientador as any);
+		if (isNaN(c.idorientador))
+			return "Orientador inválido";
+
+		c.idong = parseInt(c.idong as any);
+		if (isNaN(c.idong))
+			return "ONG inválida";
+
+		c.ano = parseInt(c.ano as any);
+		if (isNaN(c.ano) || c.ano < 0)
+			return "Ano inválido";
+
+		return null;
+	}
+	
 	public static async listar(): Promise<Consultoria[]> {
 		let lista: Consultoria[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = (await sql.query("select c.id, c.ano, e.nome, o.nome from consultoria c inner join orientador e on (c.idorientador = e.id) inner join ong o on (c.idong = o.id) order by c.ano asc")) as Consultoria[];
+			lista = (await sql.query("select c.id, c.ano, e.nome orientador, o.nome ong from consultoria c inner join orientador e on (c.idorientador = e.id) inner join ong o on (c.idong = o.id) order by c.ano asc")) as Consultoria[];
 		});
 
 		return lista || [];
@@ -37,38 +52,25 @@ export = class Consultoria{
 		}
 
 		await Sql.conectar(async (sql: Sql) => {
-            // TIRAR ESSE TRY CATCH -> nao tem que validar se ja existe ou nao
-
-			try {
-				await sql.query("INSERT INTO consultoria (idorientador, idong, ano) VALUES (?, ?, ?)", [c.idorientador, c.idong, c.ano]);
-			} catch (e) {
-				if (e.code && e.code === "ER_DUP_ENTRY")
-					erro = `Consultoria ${c.ano} `;
-				else
-					throw e;
-			}
-
+			await sql.query("INSERT INTO consultoria (idorientador, idong, ano) VALUES (?, ?, ?)", [c.idorientador, c.idong, c.ano]);
 		});
 
 		return erro;
     }
     
     public static async alterar(c: Consultoria): Promise<string> {
-		let res: string;
+		let erro: string = Consultoria.validar(c);
+
+		if (erro) {
+			return erro;
+		}
 
 		await Sql.conectar(async (sql: Sql) => {
-			try {
-				await sql.query("update consultoria set idorientador = ?, idong = ?, ano = ? where id = ?", [c.idorientador, c.idong, c.ano, c.id]);
-				res = sql.linhasAfetadas.toString();
-			} catch (e) {
-				if (e.code && e.code === "ER_DUP_ENTRY")
-					res = `A consultoria ${c.id} já existe`;
-				else
-					throw e;
-			}
+			await sql.query("update consultoria set idorientador = ?, idong = ?, ano = ? where id = ?", [c.idorientador, c.idong, c.ano, c.id]);
+			erro = sql.linhasAfetadas.toString();
 		});
 
-		return res;
+		return erro;
 	}
 
 	public static async excluir(id: number): Promise<string> {

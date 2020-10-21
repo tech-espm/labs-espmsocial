@@ -6,7 +6,7 @@ export = class Orientador{
 	public nome: string;
 
 
-	private static validar(orientador: Orientador): string {       // ACHO Q NAO PRECISA
+	private static validar(orientador: Orientador): string {
 		orientador.nome = (orientador.nome || "").normalize().trim();
 		if (orientador.nome.length < 3 || orientador.nome.length > 100)
 			return "Nome de Orientador inválido";
