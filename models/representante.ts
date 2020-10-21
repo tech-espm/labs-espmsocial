@@ -17,10 +17,20 @@ export = class Representante {
             
         r.idong = parseInt(r.idong as any);
 		if (isNaN(r.idong))
-			return "Ong inválida";    
+			return "Ong inválida";
 
-		// email, telefone, whatsapp
-
+		r.email = (r.email || "").normalize().trim();
+		if (r.email.length < 3 || r.email.length > 100)
+			return "Email inválido";
+			
+		r.telefone = (r.telefone || "").normalize().trim();
+		if (r.telefone.length < 3 || r.telefone.length > 20)
+			return "Telefone inválido";
+					
+		r.whatsapp = (r.whatsapp || "").normalize().trim();
+		if (r.whatsapp.length < 3 || r.whatsapp.length > 20)
+            return "Whatsapp inválido";		
+	
 		return null;
 	}
 
