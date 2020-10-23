@@ -12,6 +12,9 @@ export = class Ong {
     public ativo: number;
 
 	private static validar(ong: Ong): string {
+		if (!ong)
+			return "Dados inválidos";
+
 		ong.nome = (ong.nome || "").normalize().trim();
 		if (ong.nome.length < 3 || ong.nome.length > 100)
 			return "Nome inválido";
@@ -64,10 +67,10 @@ export = class Ong {
 			try {
 				await sql.query("insert into ong (nome, telefone, endereco, email, criacao, ativo) values (?,?,?,?,now(),?)", [ong.nome, ong.telefone, ong.endereco, ong.email, ong.ativo]);
 			} catch (e) {
-			if (e.code && e.code === "ER_DUP_ENTRY")
-				res = `A Ong ${ong.nome} já existe`;
-			else
-				throw e;
+				if (e.code && e.code === "ER_DUP_ENTRY")
+					res = `A Ong ${ong.nome} já existe`;
+				else
+					throw e;
 			}
 		});
 
@@ -82,7 +85,9 @@ export = class Ong {
 		await Sql.conectar(async (sql: Sql) => {
 			try {
 				await sql.query("update ong set nome = ?, telefone = ?, endereco = ?, email = ?, ativo = ?  where id = ?", [ong.nome, ong.telefone, ong.endereco, ong.email, ong.ativo, ong.id]);
-				res = sql.linhasAfetadas.toString();
+
+				if (!sql.linhasAfetadas)
+					res = "Ong não encontrada";
 			} catch (e) {
 				if (e.code && e.code === "ER_DUP_ENTRY")
 					res = `A Ong ${ong.nome} já existe`;
@@ -99,7 +104,9 @@ export = class Ong {
 
 		await Sql.conectar(async (sql: Sql) => {
 			await sql.query("delete from ong where id = ?", [id]);
-			res = sql.linhasAfetadas.toString();
+
+			if (!sql.linhasAfetadas)
+				res = "Ong não encontrada";
 		});
 
 		return res;

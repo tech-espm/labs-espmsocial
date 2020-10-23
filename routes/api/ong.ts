@@ -1,0 +1,92 @@
+﻿import express = require("express");
+import wrap = require("express-async-error-wrapper");
+import jsonRes = require("../../utils/jsonRes");
+import Ong = require("../../models/ong");
+import Usuario = require("../../models/usuario");
+
+const router = express.Router();
+
+// Se utilizar router.xxx() mas não utilizar o wrap(), as exceções ocorridas
+// dentro da função async não serão tratadas!!!
+router.get("/listar", wrap(async (req: express.Request, res: express.Response) => {
+	//let u = await Usuario.cookie(req, res);
+	//if (!u)
+	//	return;
+	res.json(await Ong.listar());
+}));
+
+router.get("/obter/:id", wrap(async (req: express.Request, res: express.Response) => {
+	//let u = await Usuario.cookie(req, res);
+	//if (!u)
+	//	return;
+
+	let id = parseInt(req.params["id"]);
+
+	if (isNaN(id)) {
+		res.status(400).json("Id inválido");
+		return;
+	}
+
+	let ong = await Ong.obter(id);
+
+	if (!ong) {
+		res.status(404).json("Ong não encontrada");
+	} else {
+		res.json(ong);
+	}
+}));
+
+router.post("/criar", wrap(async (req: express.Request, res: express.Response) => {
+	//let u = await Usuario.cookie(req, res, true);
+	//if (!u)
+	//	return;
+
+	let ong = req.body as Ong;
+
+	let erro = await Ong.criar(ong);
+
+	if (erro) {
+		res.status(400).json(erro);
+	} else {
+		res.sendStatus(204);
+	}
+}));
+
+router.post("/alterar", wrap(async (req: express.Request, res: express.Response) => {
+	//let u = await Usuario.cookie(req, res, true);
+	//if (!u)
+	//	return;
+
+	let ong = req.body as Ong;
+
+	let erro = await Ong.alterar(ong);
+
+	if (erro) {
+		res.status(400).json(erro);
+	} else {
+		res.sendStatus(204);
+	}
+}));
+
+router.get("/excluir/:id", wrap(async (req: express.Request, res: express.Response) => {
+	//let u = await Usuario.cookie(req, res);
+	//if (!u)
+	//	return;
+
+	let id = parseInt(req.params["id"]);
+
+	if (isNaN(id)) {
+		res.status(400).json("Id inválido");
+		return;
+	}
+
+	let erro = await Ong.excluir(id);
+
+	if (erro) {
+		res.status(400).json(erro);
+	} else {
+		res.sendStatus(204);
+	}
+}));
+
+export = router;
