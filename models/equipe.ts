@@ -66,7 +66,9 @@ export = class Equipe{
 		await Sql.conectar(async (sql: Sql) => {
 			try {
 				await sql.query("update equipe set nome = ? where id = ?", [equipe.nome, equipe.id]);
-				res = sql.linhasAfetadas.toString();
+				
+				if (!sql.linhasAfetadas)
+					res = "Equipe não encontrada";
 			} catch (e) {
 				if (e.code && e.code === "ER_DUP_ENTRY")
 					res = `A equipe ${equipe.nome} já existe`;
@@ -83,7 +85,9 @@ export = class Equipe{
 
 		await Sql.conectar(async (sql: Sql) => {
 			await sql.query("delete from equipe where id = ?", [id]);
-			res = sql.linhasAfetadas.toString();
+			
+			if (!sql.linhasAfetadas)
+				res = "Equipe não encontrada";
 		});
 
 		return res;

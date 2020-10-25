@@ -66,7 +66,9 @@ export = class Orientador{
 		await Sql.conectar(async (sql: Sql) => {
 			try {
 				await sql.query("update orientador set nome = ? where id = ?", [orientador.nome, orientador.id]);
-				res = sql.linhasAfetadas.toString();
+				
+				if (!sql.linhasAfetadas)
+					res = "Orientador não encontrado";
 			} catch (e) {
 				if (e.code && e.code === "ER_DUP_ENTRY")
 					res = `O orientador ${orientador.nome} já existe`;
@@ -83,7 +85,9 @@ export = class Orientador{
 
 		await Sql.conectar(async (sql: Sql) => {
 			await sql.query("delete from orientador where id = ?", [id]);
-			res = sql.linhasAfetadas.toString();
+			
+			if (!sql.linhasAfetadas)
+				res = "Orientador não encontrado";
 		});
 
 		return res;

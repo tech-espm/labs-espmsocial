@@ -81,7 +81,9 @@ export = class Representante {
 		await Sql.conectar(async (sql: Sql) => {
 			try {
 				await sql.query("update representante set nome = ?, idong = ?, email = ?, telefone = ?, whatsapp = ? where id = ?", [r.nome,r.idong, r.email, r.telefone, r.whatsapp, r.id]);
-				res = sql.linhasAfetadas.toString();
+				
+				if (!sql.linhasAfetadas)
+					res = "Representante não encontrado";
 			} catch (e) {
 				if (e.code && e.code === "ER_DUP_ENTRY")
 					res = `O representante ${r.nome} já existe`;
@@ -98,7 +100,9 @@ export = class Representante {
 
 		await Sql.conectar(async (sql: Sql) => {
 			await sql.query("delete from representante where id = ?", [id]);
-			res = sql.linhasAfetadas.toString();
+			
+			if (!sql.linhasAfetadas)
+				res = "Representante não encontrado";
 		});
 
 		return res;

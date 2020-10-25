@@ -67,7 +67,9 @@ export = class Consultoria{
 
 		await Sql.conectar(async (sql: Sql) => {
 			await sql.query("update consultoria set idorientador = ?, idong = ?, ano = ? where id = ?", [c.idorientador, c.idong, c.ano, c.id]);
-			erro = sql.linhasAfetadas.toString();
+			
+			if (!sql.linhasAfetadas)
+				erro = "Consultoria não encontrada";
 		});
 
 		return erro;
@@ -78,7 +80,9 @@ export = class Consultoria{
 
 		await Sql.conectar(async (sql: Sql) => {
 			await sql.query("delete from consultoria where id = ?", [id]);
-			res = sql.linhasAfetadas.toString();
+			
+			if (!sql.linhasAfetadas)
+				res = "Consultoria não encontrada";
 		});
 
 		return res;
