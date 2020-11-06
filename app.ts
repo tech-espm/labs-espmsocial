@@ -100,6 +100,7 @@ app.use((req: express.Request, res: express.Response, next: express.NextFunction
 // Cadastros simples
 app.use("/", require("./routes/home"));
 app.use("/usuario", require("./routes/usuario"));
+app.use("/equipe", require("./routes/equipe"));
 // API
 app.use("/api/cargo", require("./routes/api/cargo"));
 app.use("/api/ong", require("./routes/api/ong"));

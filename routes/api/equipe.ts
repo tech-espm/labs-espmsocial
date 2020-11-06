@@ -67,9 +67,10 @@ router.post("/alterar", wrap(async (req: express.Request, res: express.Response)
 }));
 
 router.get("/excluir/:id", wrap(async (req: express.Request, res: express.Response) => {
-	//let u = await Usuario.cookie(req, res);
-	//if (!u)
-	//	return;
+	let u = await Usuario.cookie(req, res);
+	
+	if (!u)
+		return;
 
 	let id = parseInt(req.params["id"]);
 
