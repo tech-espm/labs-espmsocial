@@ -62,7 +62,7 @@
 		$("#modalExcluir").modal("hide");
 		var equipe = tabela.row(trClicada).data();
 		Notification.wait();
-		JsonWebApi.get("<%- root %>/api/equipe/excluir", function (response) {
+		JsonWebApi.get("<%- root %>/api/equipe/excluir/" + equipe.id, function (response) {
 			if (response.success) {
 				Notification.success("Equipe excluída com sucesso! " + emoji.happy);
 				tabela.row(trClicada).remove().draw();
@@ -70,7 +70,7 @@
 				Notification.error(response.value, true);
 			}
 			trClicada = null;
-		}, "id", equipe.id);
+		});
 	}
 	//]]>
 </script>
