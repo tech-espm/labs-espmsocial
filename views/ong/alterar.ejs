@@ -1,0 +1,98 @@
+
+<div class="row">
+	<div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+		<form id="form" class="panel panel-default" action="#">
+			<div class="panel-heading">Informações da ONG</div>
+			<div class="panel-body no-bottom">
+				<input type="hidden" id="id" name="id" value="<%=(item ? item.id : 0) %>" />
+				<div class="form-group">
+					<label for="nome">Nome</label>
+					<input id="nome" name="nome" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.nome : '') %>" />
+                </div>
+				<div class="form-group">
+					<label for="telefone">Telefone</label>
+					<input id="telefone" name="telefone" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.telefone : '') %>" />
+				</div>
+				<div class="form-group">
+					<label for="endereco">Endereço</label>
+					<input id="endereco" name="endereco" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.endereco : '') %>" />
+				</div>
+                <div class="form-group">
+					<label for="email">Email</label>
+					<input id="email" name="email" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.email : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="ativo">Ativo</label>
+					<input id="ativo" name="ativo" maxlength="20" class="form-control" type="checkbox" spellcheck="false" value="<%=(item ? item.whatsapp : '') %>" />
+                </div>
+       
+			</div>
+			<div class="panel-footer">
+				<input value="<%=(item ? 'Salvar Alterações' : 'Criar Representante') %>" class="btn btn-primary btn-lg btn-block" type="submit" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<%- contentFor("scripts") %>
+<script type="text/javascript">
+	//<![CDATA[
+	"use strict";
+
+	$("#form").validate({
+		rules: {
+			nome: {
+				required: true,
+				minlength: 3,
+				maxlength: 100
+            },
+           telefone: {
+				required: true,
+				minlength: 3,
+				maxlength: 100
+            } ,
+            endereco: {
+				required: true,
+				minlength: 3,
+				maxlength: 20
+            },
+            email: {
+				required: true,
+				minlength: 3,
+				maxlength: 100
+            }
+
+		},
+
+		submitHandler: function (form) {
+			if (JsonWebApi.active)
+				return;
+
+			Notification.wait();
+
+			//<% if (item) { %>
+
+			JsonWebApi.postFormData("<%- root %>/api/representante/alterar", form, function (response) {
+				if (response.success)
+					Notification.success("Representante alterado com sucesso! " + emoji.happy);
+				else
+					Notification.error(response.value, true);
+			});
+
+			//<% } else { %>
+
+			JsonWebApi.postFormData("<%- root %>/api/representante/criar", form, function (response) {
+				if (response.success) {
+					resetForm("#form");
+					Notification.success("Representante criado com sucesso! " + emoji.happy);
+				} else {
+					Notification.error(response.value, true);
+				}
+			});
+
+			//<% } %>
+		}
+	});
+	//]]>
+</script>

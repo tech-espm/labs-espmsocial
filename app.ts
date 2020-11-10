@@ -101,6 +101,9 @@ app.use((req: express.Request, res: express.Response, next: express.NextFunction
 app.use("/", require("./routes/home"));
 app.use("/usuario", require("./routes/usuario"));
 app.use("/equipe", require("./routes/equipe"));
+app.use("/causa", require("./routes/causa"));
+app.use("/ong", require("./routes/ong"));
+app.use("/orientador", require("./routes/orientador"));
 // API
 app.use("/api/cargo", require("./routes/api/cargo"));
 app.use("/api/ong", require("./routes/api/ong"));

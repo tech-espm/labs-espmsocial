@@ -39,21 +39,6 @@
 
 				<li class="sidebar-spacer"></li>
 
-				<li>
-					<a href="#"><i class="fa fa-comment-o fa-fw"></i>Equipe<span class="fa arrow"></span></a>
-					<ul class="nav nav-second-level collapse">
-
-						<li>
-							<a href="<%- root %>/equipe/criar"><i class="fa fa-plus fa-fw"></i>Criar</a>
-						</li>
-
-						<li>
-							<a href="<%- root %>/equipe/listar"><i class="fa fa-tasks fa-fw"></i>Gerenciar</a>
-						</li>
-
-					</ul>
-				</li>
-
 				<% if (usuario.admin) { %>
 
 				<li class="sidebar-spacer"></li>
@@ -68,6 +53,66 @@
 
 						<li>
 							<a href="<%- root %>/usuario/listar"><i class="fa fa-tasks fa-fw"></i>Gerenciar</a>
+						</li>
+
+					</ul>
+				</li>
+
+				<li>
+					<a href="#"><i class="fa fa-users fa-fw"></i>Equipes<span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level collapse">
+
+						<li>
+							<a href="<%- root %>/equipe/criar"><i class="fa fa-plus fa-fw"></i>Criar</a>
+						</li>
+
+						<li>
+							<a href="<%- root %>/equipe/listar"><i class="fa fa-tasks fa-fw"></i>Gerenciar</a>
+						</li>
+
+					</ul>
+				</li>
+
+				<li>
+					<a href="#"><i class="fa fa-heart fa-fw"></i>Causas<span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level collapse">
+
+						<li>
+							<a href="<%- root %>/causa/criar"><i class="fa fa-plus fa-fw"></i>Criar</a>
+						</li>
+
+						<li>
+							<a href="<%- root %>/causa/listar"><i class="fa fa-tasks fa-fw"></i>Gerenciar</a>
+						</li>
+
+					</ul>
+				</li>
+
+				<li>
+					<a href="#"><i class="fa fa-heart-o fa-fw"></i>ONGs<span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level collapse">
+
+						<li>
+							<a href="<%- root %>/ong/criar"><i class="fa fa-plus fa-fw"></i>Criar</a>
+						</li>
+
+						<li>
+							<a href="<%- root %>/ong/listar"><i class="fa fa-tasks fa-fw"></i>Gerenciar</a>
+						</li>
+
+					</ul>
+				</li>
+
+				<li>
+					<a href="#"><i class="fa fa-handshake-o fa-fw"></i>Orientadores<span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level collapse">
+
+						<li>
+							<a href="<%- root %>/orientador/criar"><i class="fa fa-plus fa-fw"></i>Criar</a>
+						</li>
+
+						<li>
+							<a href="<%- root %>/orientador/listar"><i class="fa fa-tasks fa-fw"></i>Gerenciar</a>
 						</li>
 
 					</ul>

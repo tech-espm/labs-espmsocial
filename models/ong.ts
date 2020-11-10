@@ -38,7 +38,7 @@ export = class Ong {
 		return null;
 	}
 
-	public static async listar(): Promise<Ong[]> { // NAO COLOQUEI O ATIVO PRA LISTAR
+	public static async listar(): Promise<Ong[]> { 
 		let lista: Ong[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
