@@ -17,7 +17,7 @@
 			</div>
 			<div class="modal-body">
 				<p>
-					Tem certeza que deseja excluir a ONG  <span id="lblNome"></span>? Esta operação <b class="col-h">NÃO</b> pode ser desfeita, e <b class="col-h">TODAS AS RESPOSTAS</b> desta ONG, de <b class="col-h">TODAS AS PESSOAS</b>, também serão <b class="col-h">EXCLUÍDAS</b>!
+					Tem certeza que deseja excluir a consultoria  <span id="lblNome"></span>? Esta operação <b class="col-h">NÃO</b> pode ser desfeita, e <b class="col-h">TODAS AS RESPOSTAS</b> desta consultoria, de <b class="col-h">TODAS AS PESSOAS</b>, também serão <b class="col-h">EXCLUÍDAS</b>!
 				</p>
 			</div>
 			<div class="modal-footer">
@@ -36,28 +36,21 @@
 		order: [[2, "asc"]],
 		deferRender: true,
 		columns: [
-			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"<%- root %>/ong/alterar?id=" + row.id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
-//			{ title: "Id", "class": "col-min text-right", "type": "number", data: "id" },
-            { title: "Nome", "class": "col-20", render: encode, data: "nome" },
-            { title: "Telefone","class": "col-15", render: encode, data: "telefone" },
-            { title: "Endereco","class": "col-10", render: encode, data: "endereco" },
-            { title: "Email", "class": "col-15",render: encode, data: "email" },
-            { title: "Criação", "class": "col-15", "type": "customdateint", data: "criacao" },
-//            { title: "Ativo","class": "col-5", render: encode, data: "ativo" }
+			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"<%- root %>/consultoria/alterar?id=" + row.id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
+			{ title: "Id", "class": "col-min text-right", "type": "number", data: "id" },
+            { title: "Orientador", "class": "col-20", render: encode, data: "orientador" },
+            { title: "ONG", "class": "col-20", render: encode, data: "ong" },
 		],
 		data: <%- lista %>,
-		export: { title: "ONG" },
-	
-
+		export: { title: "Consultoria" }
 	});
 	var trClicada;
-
 	$("#tabela").on("click", "tbody button", function () {
 		if (JsonWebApi.active)
 			return;
-		var ong = tabela.row(trClicada = this.parentNode.parentNode).data();
+		var consultoria = tabela.row(trClicada = this.parentNode.parentNode).data();
 		if (this.getAttribute("data-excluir")) {
-            $("#lblNome").text(ong.nome);
+			$("#lblNome").text(consultoria.nome);
 			$("#modalExcluir").modal({
 				backdrop: "static",
 				keyboard: true
@@ -68,11 +61,13 @@
 		if (JsonWebApi.active || !trClicada)
 			return;
 		$("#modalExcluir").modal("hide");
-		var ong = tabela.row(trClicada).data();
-		Notification.wait();
-		JsonWebApi.get("<%- root %>/api/ong/excluir/" + ong.id, function (response) {
+        var consultoria = tabela.row(trClicada).data();
+        
+        Notification.wait();
+        
+		JsonWebApi.get("<%- root %>/api/consultoria/excluir/" + consultoria.id, function (response) {
 			if (response.success) {
-				Notification.success("ONG excluída com sucesso! " + emoji.happy);
+				Notification.success("Consultoria excluída com sucesso! " + emoji.happy);
 				tabela.row(trClicada).remove().draw();
 			} else {
 				Notification.error(response.value, true);

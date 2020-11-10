@@ -2,7 +2,7 @@
 <div class="row">
 	<div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 		<form id="form" class="panel panel-default" action="#">
-			<div class="panel-heading">Informações da ONG</div>
+			<div class="panel-heading">Informações do Representante</div>
 			<div class="panel-body no-bottom">
 				<input type="hidden" id="id" name="id" value="<%=(item ? item.id : 0) %>" />
 				<div class="form-group">
@@ -31,7 +31,7 @@
 				</div>
 			</div>
 			<div class="panel-footer">
-				<input value="<%=(item ? 'Salvar Alterações' : 'Criar ONG') %>" class="btn btn-primary btn-lg btn-block" type="submit" />
+				<input value="<%=(item ? 'Salvar Alterações' : 'Criar Representante') %>" class="btn btn-primary btn-lg btn-block" type="submit" />
 			</div>
 		</form>
 	</div>
@@ -64,16 +64,7 @@
 				minlength: 3,
 				maxlength: 100
             }
-            // criacao: {
-			// 	required: true,
-			// 	minlength: 3,
-			// 	maxlength: 100
-            // },
-            // ativo: {
-			// 	required: true,
-			// 	minlength: 3,
-			// 	maxlength: 100
-			//}
+
 		},
 
 		submitHandler: function (form) {
@@ -84,19 +75,19 @@
 
 			//<% if (item) { %>
 
-			JsonWebApi.postFormData("<%- root %>/api/ong/alterar", form, function (response) {
+			JsonWebApi.postFormData("<%- root %>/api/repreesentante/alterar", form, function (response) {
 				if (response.success)
-					Notification.success("ONG alterada com sucesso! " + emoji.happy);
+					Notification.success("Representante alterado com sucesso! " + emoji.happy);
 				else
 					Notification.error(response.value, true);
 			});
 
 			//<% } else { %>
 
-			JsonWebApi.postFormData("<%- root %>/api/ong/criar", form, function (response) {
+			JsonWebApi.postFormData("<%- root %>/api/representante/criar", form, function (response) {
 				if (response.success) {
 					resetForm("#form");
-					Notification.success("ONG criada com sucesso! " + emoji.happy);
+					Notification.success("Representante criada com sucesso! " + emoji.happy);
 				} else {
 					Notification.error(response.value, true);
 				}

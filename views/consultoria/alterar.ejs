@@ -1,0 +1,91 @@
+
+<div class="row">
+	<div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+		<form id="form" class="panel panel-default" action="#">
+			<div class="panel-heading">Informações da Consultoria</div>
+			<div class="panel-body no-bottom">
+                <input type="hidden" id="id" name="id" value="<%=(item ? item.id : 0) %>" />
+
+                <div class="form-group">
+					<label for="idorientador">Orientador</label>
+					<select id="idorientador" name="idorientador" class="form-control" size="1">
+						<option value="">SELECIONE...</option>
+						<% for (let i = 0; i < orientadores.length; i++) { %>
+						<option value="<%= orientadores[i].id %>" <%-((item && item.idorientador === orientadores[i].id) ? 'selected="selected"' : '') %>><%= orientadores[i].nome %></option>
+						<% } %>
+					</select>
+                </div>
+
+                <div class="form-group">
+					<label for="idong">ONG</label>
+					<select id="idong" name="idong" class="form-control" size="1">
+						<option value="">SELECIONE...</option>
+						<% for (let i = 0; i < ongs.length; i++) { %>
+						<option value="<%= ongs[i].id %>" <%-((item && item.idong === ongs[i].id) ? 'selected="selected"' : '') %>><%= ongs[i].nome %></option>
+						<% } %>
+					</select>
+                </div>
+                
+				<div class="form-group">
+					<label for="ano">Ano</label>
+					<input id="ano" name="ano" maxlength="11" class="form-control" type="int" spellcheck="false" value="<%=(item ? item.ano : '') %>" />
+				</div>
+			</div>
+			<div class="panel-footer">
+				<input value="<%=(item ? 'Salvar Alterações' : 'Criar Consultoria') %>" class="btn btn-primary btn-lg btn-block" type="submit" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<%- contentFor("scripts") %>
+<script type="text/javascript">
+	//<![CDATA[
+	"use strict";
+
+	$("#form").validate({
+		rules: {
+            idorientador: {
+				required: true
+            },
+            idong: {
+				required: true
+            },
+            nome: {
+				required: true,
+				minlength: 0,
+				maxlength: 11
+            }
+		},
+
+		submitHandler: function (form) {
+			if (JsonWebApi.active)
+				return;
+
+			Notification.wait();
+
+			//<% if (item) { %>
+
+			JsonWebApi.postFormData("<%- root %>/api/consultoria/alterar", form, function (response) {
+				if (response.success)
+					Notification.success("Consultoria alterada com sucesso! " + emoji.happy);
+				else
+					Notification.error(response.value, true);
+			});
+
+			//<% } else { %>
+
+			JsonWebApi.postFormData("<%- root %>/api/consultoria/criar", form, function (response) {
+				if (response.success) {
+					resetForm("#form");
+					Notification.success("Consultoria criada com sucesso! " + emoji.happy);
+				} else {
+					Notification.error(response.value, true);
+				}
+			});
+
+			//<% } %>
+		}
+	});
+	//]]>
+</script>
