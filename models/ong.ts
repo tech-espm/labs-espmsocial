@@ -9,7 +9,8 @@ export = class Ong {
     public endereco: string;
     public email: string;
     public criacao: string;
-    public ativo: number;
+	public ativo: number;
+	public causas: number[];
 
 	private static validar(ong: Ong): string {
 		if (!ong)
@@ -35,6 +36,14 @@ export = class Ong {
 		if (isNaN(ong.ativo) || ong.ativo < 0 || ong.ativo > 1)
 			return "Status ativo inválido";
 
+		if (ong.causas && ong.causas.length) {
+			for (let i = 0; i < ong.causas.length; i++) {
+				ong.causas[i] = parseInt(ong.causas[i] as any);
+				if (isNaN(ong.causas[i]))
+					return "Causa inválida";
+			}
+		}
+
 		return null;
 	}
 
@@ -49,13 +58,23 @@ export = class Ong {
 	}
 
 	public static async obter(id: number): Promise<Ong> {
-		let lista: Ong[] = null;
+		let ong: Ong = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = (await sql.query("select id, nome, telefone, endereco, email, date_format(criacao, '%d/%m/%Y') criacao, ativo from ong where id = ?", [id])) as Ong[];
+			const lista = (await sql.query("select id, nome, telefone, endereco, email, date_format(criacao, '%d/%m/%Y') criacao, ativo from ong where id = ?", [id])) as Ong[];
+
+			if (lista && lista[0]) {
+				ong = lista[0];
+				ong.causas = [];
+				const causas = await sql.query("select idcausa from ong_causa where idong = ?", [id]);
+				if (causas) {
+					for (let i = 0; i < causas.length; i++)
+						ong.causas.push(causas[i].idcausa);
+				}
+			}
 		});
 
-		return (lista && lista[0]) || null;
+		return ong;
 	}
 
 	public static async criar(ong: Ong): Promise<string> {
@@ -65,7 +84,18 @@ export = class Ong {
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
+				await sql.beginTransaction();
+
 				await sql.query("insert into ong (nome, telefone, endereco, email, criacao, ativo) values (?,?,?,?,now(),?)", [ong.nome, ong.telefone, ong.endereco, ong.email, ong.ativo]);
+
+				ong.id = await sql.scalar("select last_insert_id()") as number;
+
+				if (ong.causas && ong.causas.length) {
+					for (let i = 0; i < ong.causas.length; i++)
+						await sql.query("insert into ong_causa (idong, idcausa) values (?, ?)", [ong.id, ong.causas[i]]);
+				}
+
+				await sql.commit();
 			} catch (e) {
 				if (e.code && e.code === "ER_DUP_ENTRY")
 					res = `A Ong ${ong.nome} já existe`;
@@ -84,10 +114,23 @@ export = class Ong {
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
+				await sql.beginTransaction();
+
 				await sql.query("update ong set nome = ?, telefone = ?, endereco = ?, email = ?, ativo = ?  where id = ?", [ong.nome, ong.telefone, ong.endereco, ong.email, ong.ativo, ong.id]);
 
-				if (!sql.linhasAfetadas)
+				if (!sql.linhasAfetadas) {
 					res = "Ong não encontrada";
+					return;
+				}
+
+				await sql.query("delete from ong_causa where idong = ?", [ong.id]);
+
+				if (ong.causas && ong.causas.length) {
+					for (let i = 0; i < ong.causas.length; i++)
+						await sql.query("insert into ong_causa (idong, idcausa) values (?, ?)", [ong.id, ong.causas[i]]);
+				}
+
+				await sql.commit();
 			} catch (e) {
 				if (e.code && e.code === "ER_DUP_ENTRY")
 					res = `A Ong ${ong.nome} já existe`;

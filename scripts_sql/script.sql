@@ -74,7 +74,7 @@ CREATE TABLE causa (
   UNIQUE KEY causa_nome_UN (nome)
 );
 
-INSERT INTO causa (nome) VALUES ('LGBT'), ('RACISMO'), ('CRIANÇAS ABANDONADAS');
+INSERT INTO causa (nome) VALUES ('LGBT'), ('Racismo'), ('Crianças Abandonadas');
 
 -- DROP TABLE IF EXISTS ong;
 CREATE TABLE ong (
