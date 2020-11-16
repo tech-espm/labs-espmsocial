@@ -105,7 +105,7 @@ app.use("/causa", require("./routes/causa"));
 app.use("/ong", require("./routes/ong"));
 app.use("/orientador", require("./routes/orientador"));
 app.use("/consultoria", require("./routes/consultoria"));
-app.use("/representantes", require("./routes/representantes"));
+app.use("/representante", require("./routes/representante"));
 // API
 app.use("/api/cargo", require("./routes/api/cargo"));
 app.use("/api/ong", require("./routes/api/ong"));

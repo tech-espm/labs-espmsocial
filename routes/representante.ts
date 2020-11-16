@@ -3,6 +3,7 @@ import wrap = require("express-async-error-wrapper");
 import Representante = require("../models/representante");
 import Usuario = require("../models/usuario");
 import appsettings = require("../appsettings");
+import Ong = require("../models/ong");
 
 const router = express.Router();
 
@@ -33,7 +34,7 @@ router.get("/listar", wrap(async (req: express.Request, res: express.Response) =
 	if (!u || !u.admin)
 		res.redirect(appsettings.root + "/acesso");
 	else
-		res.render("equipe/listar", { titulo: "Gerenciar Representante", usuario: u, lista: JSON.stringify(await Representante.listar()) });
+		res.render("equipe/listar", { titulo: "Gerenciar Representante", usuario: u, lista: JSON.stringify(await Ong.listar()) });
 }));
 
 export = router;

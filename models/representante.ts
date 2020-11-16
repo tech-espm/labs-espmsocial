@@ -33,7 +33,7 @@ export = class Representante {
 		return null;
 	}
 
-	public static async listar(idong: number): Promise<Representante[]> { 
+	public static async listar(id: number): Promise<Representante[]> { 
 		let lista: Representante[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
