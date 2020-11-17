@@ -44,16 +44,7 @@
 				</div>
 			</div>
 
-			<% if (item) { %>
-				<div class="panel panel-default">
-					<div class="panel-heading">Representantes</div>
-					<div class="panel-body">
-						<p>Nome: <%= lista[i].nome %></p>
-					</div>
-				</div>
-			<% } %>
-
-			<input value="<%=(item ? 'Salvar Alterações' : 'Criar ONG') %>" class="btn btn-primary btn-lg btn-block" type="submit" />
+			<input value="<%=(item ? 'Salvar Alterações' : 'Criar ONG') %>" class="btn btn-primary btn-lg btn-block col-xs-space-bottom" type="submit" />
 		</form>
 	</div>
 </div>

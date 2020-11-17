@@ -51,6 +51,20 @@ router.get("/dashboard", wrap(async (req: express.Request, res: express.Response
 		res.render("home/dashboard", { titulo: "Dashboard", usuario: u });
 }));
 
+router.get("/carteirinha/:id?", wrap(async (req: express.Request, res: express.Response) => {
+	let id = parseInt(req.params["id"]);
+	if (id) {
+		let u = await Usuario.obter(id);
+		res.render("home/carteirinha-externa", { layout: "layout-externo", titulo: "Carteirinha", usuario: u });
+	} else {
+		let u = await Usuario.cookie(req);
+		if (!u)
+			res.redirect(appsettings.root + "/login");
+		else
+			res.render("home/carteirinha", { titulo: "Carteirinha", usuario: u });
+	}
+}));
+
 router.get("/acesso", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
 	if (!u)

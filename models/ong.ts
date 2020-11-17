@@ -36,11 +36,18 @@ export = class Ong {
 		if (isNaN(ong.ativo) || ong.ativo < 0 || ong.ativo > 1)
 			return "Status ativo inválido";
 
-		if (ong.causas && ong.causas.length) {
-			for (let i = 0; i < ong.causas.length; i++) {
-				ong.causas[i] = parseInt(ong.causas[i] as any);
-				if (isNaN(ong.causas[i]))
-					return "Causa inválida";
+		if (!ong.causas) {
+			ong.causas = [];
+		} else {
+			if ((typeof ong.causas) === "string" || (typeof ong.causas) === "number")
+				ong.causas = [ ong.causas as any ];
+
+			if (ong.causas.length) {
+				for (let i = 0; i < ong.causas.length; i++) {
+					ong.causas[i] = parseInt(ong.causas[i] as any);
+					if (isNaN(ong.causas[i]))
+						return "Causa inválida";
+				}
 			}
 		}
 

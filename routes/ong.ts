@@ -17,7 +17,6 @@ router.all("/criar", wrap(async (req: express.Request, res: express.Response) =>
 			titulo: "Criar ONG",
 			usuario: u,
 			causas: await Causa.listar(),
-			representantes: null,
 			item: null
 		});
 }));
@@ -36,7 +35,6 @@ router.all("/alterar", wrap(async (req: express.Request, res: express.Response) 
 				titulo: "Editar ONG",
 				usuario: u,
 				causas: await Causa.listar(),
-				representantes: await Representante.listar(id),
 				item: item
 			});
 	}

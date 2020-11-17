@@ -12,7 +12,7 @@ router.all("/criar", wrap(async (req: express.Request, res: express.Response) =>
 	if (!u || !u.admin)
 		res.redirect(appsettings.root + "/acesso");
 	else
-		res.render("representante/alterar", { titulo: "Criar Representante", usuario: u, item: null });
+		res.render("representante/alterar", { titulo: "Criar Representante", usuario: u, item: null, ongs: await Ong.listar() });
 }));
 
 router.all("/alterar", wrap(async (req: express.Request, res: express.Response) => {
@@ -25,7 +25,7 @@ router.all("/alterar", wrap(async (req: express.Request, res: express.Response) 
 		if (isNaN(id) || !(item = await Representante.obter(id)))
 			res.render("home/nao-encontrado", { usuario: u });
 		else
-			res.render("representante/alterar", { titulo: "Editar Representante", usuario: u, item: item });
+			res.render("representante/alterar", { titulo: "Editar Representante", usuario: u, item: item, ongs: await Ong.listar() });
 	}
 }));
 
@@ -34,7 +34,7 @@ router.get("/listar", wrap(async (req: express.Request, res: express.Response) =
 	if (!u || !u.admin)
 		res.redirect(appsettings.root + "/acesso");
 	else
-		res.render("equipe/listar", { titulo: "Gerenciar Representante", usuario: u, lista: JSON.stringify(await Ong.listar()) });
+		res.render("representante/listar", { titulo: "Gerenciar Representante", usuario: u, lista: JSON.stringify(await Representante.listar()) });
 }));
 
 export = router;

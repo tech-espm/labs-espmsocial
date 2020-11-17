@@ -186,7 +186,7 @@ export = class Usuario {
 		let lista: Usuario[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select u.id, u.login, u.nome, c.nome cargo, date_format(u.criacao, '%d/%m/%Y') criacao from usuario u inner join cargo c on c.id = u.idcargo order by u.login asc") as Usuario[];
+			lista = await sql.query("select u.id, u.login, u.nome, c.nome cargo, date_format(u.criacao, '%d/%m/%Y') criacao, ativo from usuario u inner join cargo c on c.id = u.idcargo order by u.login asc") as Usuario[];
 		});
 
 		return (lista || []);
@@ -196,7 +196,7 @@ export = class Usuario {
 		let lista: Usuario[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select id, login, nome, idcargo, date_format(criacao, '%d/%m/%Y') criacao from usuario where id = ?", [id]) as Usuario[];
+			lista = await sql.query("select id, login, nome, idcargo, date_format(criacao, '%d/%m/%Y') criacao, ativo from usuario where id = ?", [id]) as Usuario[];
 		});
 
 		return ((lista && lista[0]) || null);

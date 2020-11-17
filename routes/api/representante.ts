@@ -8,16 +8,17 @@ import Usuario = require("../../models/usuario");
 const router = express.Router();
 
 router.get("/listar", wrap(async (req: express.Request, res: express.Response) => {
-	//let u = await Usuario.cookie(req, res);
-	//if (!u)
-	//	return;
+	let u = await Usuario.cookie(req, res);
+	if (!u)
+		return;
+
 	res.json(await Representante.listar());
 }));
 
 router.get("/obter/:id", wrap(async (req: express.Request, res: express.Response) => {
-	//let u = await Usuario.cookie(req, res);
-	//if (!u)
-	//	return;
+	let u = await Usuario.cookie(req, res);
+	if (!u)
+		return;
 
 	let id = parseInt(req.params["id"]);
 
@@ -36,9 +37,9 @@ router.get("/obter/:id", wrap(async (req: express.Request, res: express.Response
 }));
 
 router.post("/criar", wrap(async (req: express.Request, res: express.Response) => {
-	//let u = await Usuario.cookie(req, res, true);
-	//if (!u)
-	//	return;
+	let u = await Usuario.cookie(req, res, true);
+	if (!u)
+		return;
 
 	let r = req.body as Representante;
 
@@ -52,9 +53,9 @@ router.post("/criar", wrap(async (req: express.Request, res: express.Response) =
 }));
 
 router.post("/alterar", wrap(async (req: express.Request, res: express.Response) => {
-	//let u = await Usuario.cookie(req, res, true);
-	//if (!u)
-	//	return;
+	let u = await Usuario.cookie(req, res, true);
+	if (!u)
+		return;
 
 	let r = req.body as Representante;
 
@@ -68,9 +69,9 @@ router.post("/alterar", wrap(async (req: express.Request, res: express.Response)
 }));
 
 router.get("/excluir/:id", wrap(async (req: express.Request, res: express.Response) => {
-	//let u = await Usuario.cookie(req, res);
-	//if (!u)
-	//	return;
+	let u = await Usuario.cookie(req, res);
+	if (!u)
+		return;
 
 	let id = parseInt(req.params["id"]);
 

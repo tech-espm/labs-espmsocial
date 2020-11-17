@@ -33,11 +33,11 @@ export = class Representante {
 		return null;
 	}
 
-	public static async listar(id: number): Promise<Representante[]> { 
+	public static async listar(): Promise<Representante[]> { 
 		let lista: Representante[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = (await sql.query("select id, nome, idong, email, telefone, whatsapp from representante where idong = ? order by nome asc", [idong])) as Representante[];
+			lista = (await sql.query("select r.id, r.nome, r.idong, o.nome ong, r.email, r.telefone, r.whatsapp from representante r inner join ong o on o.id = r.idong order by nome asc")) as Representante[];
 		});
 
 		return lista || [];
@@ -62,10 +62,10 @@ export = class Representante {
 			try {
 				await sql.query("insert into representante (nome, idong, email, telefone, whatsapp) values (?,?,?,?,?)", [r.nome, r.idong, r.email, r.telefone,r.whatsapp]);
 			} catch (e) {
-			if (e.code && e.code === "ER_DUP_ENTRY")
-				res = `O representante ${r.nome} já existe`;
-			else
-				throw e;
+				if (e.code && e.code === "ER_DUP_ENTRY")
+					res = `O representante ${r.nome} já existe`;
+				else
+					throw e;
 			}
 		});
 

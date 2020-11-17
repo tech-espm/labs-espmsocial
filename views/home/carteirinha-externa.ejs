@@ -1,0 +1,13 @@
+﻿<div class="painel-msg">
+	<div class="panel panel-default no-margin-bottom">
+		<div class="panel-body">
+			<% if (!usuario) { %>
+				<h1>Membro inexistente 😥</h1>
+			<% } else if (!usuario.ativo) { %>
+				<h1>Membro inativo 😥</h1>
+			<% } else { %>
+				<h1><%= usuario.nome %></h1>
+			<% } %>
+		</div>
+	</div>
+</div>

@@ -111,6 +111,7 @@ CREATE TABLE representante (
   telefone varchar(20) NOT NULL,
   whatsapp varchar(20) NOT NULL,
   PRIMARY KEY (id),
+  UNIQUE KEY representante_nome_UN (nome),
   KEY representante_idong_FK_idx (idong),
   CONSTRAINT representante_idong_FK FOREIGN KEY (idong) REFERENCES ong (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );

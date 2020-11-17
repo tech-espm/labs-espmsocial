@@ -28,7 +28,7 @@ export = class Equipe{
     
     private static validar(equipe: Equipe): string {
 		equipe.nome = (equipe.nome || "").normalize().trim();
-		if (equipe.nome.length < 3 || equipe.nome.length > 100)
+		if (equipe.nome.length < 2 || equipe.nome.length > 100)
 			return "Nome de Equipe inválido";
 
 		return null;
