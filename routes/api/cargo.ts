@@ -9,9 +9,9 @@ const router = express.Router();
 // Se utilizar router.xxx() mas não utilizar o wrap(), as exceções ocorridas
 // dentro da função async não serão tratadas!!!
 router.get("/listar", wrap(async (req: express.Request, res: express.Response) => {
-	//let u = await Usuario.cookie(req, res);
-	//if (!u)
-	//	return;
+	let u = await Usuario.cookie(req, res);
+	if (!u)
+		return;
 	res.json(await Cargo.listar());
 }));
 

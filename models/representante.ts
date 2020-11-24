@@ -60,8 +60,12 @@ export = class Representante {
 
 		await Sql.conectar(async (sql: Sql) => { 
 			try {
+
 				await sql.query("insert into representante (nome, idong, email, telefone, whatsapp) values (?,?,?,?,?)", [r.nome, r.idong, r.email, r.telefone,r.whatsapp]);
+			
+	
 			} catch (e) {
+
 				if (e.code && e.code === "ER_DUP_ENTRY")
 					res = `O representante ${r.nome} já existe`;
 				else

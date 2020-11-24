@@ -9,16 +9,16 @@ const router = express.Router();
 // Se utilizar router.xxx() mas não utilizar o wrap(), as exceções ocorridas
 // dentro da função async não serão tratadas!!!
 router.get("/listar", wrap(async (req: express.Request, res: express.Response) => {
-	//let u = await Usuario.cookie(req, res);
-	//if (!u)
-	//	return;
+	let u = await Usuario.cookie(req, res);
+	if (!u)
+		return;
 	res.json(await Ong.listar());
 }));
 
 router.get("/obter/:id", wrap(async (req: express.Request, res: express.Response) => {
-	//let u = await Usuario.cookie(req, res);
-	//if (!u)
-	//	return;
+	let u = await Usuario.cookie(req, res);
+	if (!u)
+		return;
 
 	let id = parseInt(req.params["id"]);
 
@@ -37,9 +37,9 @@ router.get("/obter/:id", wrap(async (req: express.Request, res: express.Response
 }));
 
 router.post("/criar", wrap(async (req: express.Request, res: express.Response) => {
-	//let u = await Usuario.cookie(req, res, true);
-	//if (!u)
-	//	return;
+	let u = await Usuario.cookie(req, res, true);
+	if (!u)
+		return;
 
 	let ong = req.body as Ong;
 
@@ -53,9 +53,9 @@ router.post("/criar", wrap(async (req: express.Request, res: express.Response) =
 }));
 
 router.post("/alterar", wrap(async (req: express.Request, res: express.Response) => {
-	//let u = await Usuario.cookie(req, res, true);
-	//if (!u)
-	//	return;
+	let u = await Usuario.cookie(req, res, true);
+	if (!u)
+		return;
 
 	let ong = req.body as Ong;
 
@@ -69,9 +69,9 @@ router.post("/alterar", wrap(async (req: express.Request, res: express.Response)
 }));
 
 router.get("/excluir/:id", wrap(async (req: express.Request, res: express.Response) => {
-	//let u = await Usuario.cookie(req, res);
-	//if (!u)
-	//	return;
+	let u = await Usuario.cookie(req, res);
+	if (!u)
+		return;
 
 	let id = parseInt(req.params["id"]);
 

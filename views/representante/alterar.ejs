@@ -25,11 +25,19 @@
 					<label for="criacao">Criação</label>
 					<input id="criacao" name="nome" class="form-control" type="date" spellcheck="false" value="<%=(item ? item.criacao : '') %>" />
                 </div>
-                <div class="form-group">
-					<label for="ativo">Ativo</label>
-					<input id="ativo" name="ativo"  class="form-control" type="checkbox" spellcheck="false" value="<%=(item ? item.ativo : '') %>" />
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">ONG</div>
+				<div class="panel-body">
+					<% for (let i = 0; i < ongs.length; i++) { %>
+						<div class="checkbox">
+							<label><input type="checkbox" name="ongs" value="<%=ongs[i].id %>" <%=((item && item.ongs && item.ongs.indexOf(ongs[i].id) >= 0) ? 'checked="checked"' : '') %> /> <%=ongs[i].nome %></label>
+						</div>
+					<% } %>
 				</div>
 			</div>
+
 			<div class="panel-footer">
 				<input value="<%=(item ? 'Salvar Alterações' : 'Criar Representante') %>" class="btn btn-primary btn-lg btn-block" type="submit" />
 			</div>
@@ -75,7 +83,7 @@
 
 			//<% if (item) { %>
 
-			JsonWebApi.postFormData("<%- root %>/api/repreesentante/alterar", form, function (response) {
+			JsonWebApi.postFormData("<%- root %>/api/representante/alterar", form, function (response) {
 				if (response.success)
 					Notification.success("Representante alterado com sucesso! " + emoji.happy);
 				else
@@ -87,7 +95,7 @@
 			JsonWebApi.postFormData("<%- root %>/api/representante/criar", form, function (response) {
 				if (response.success) {
 					resetForm("#form");
-					Notification.success("Representante criada com sucesso! " + emoji.happy);
+					Notification.success("Representante criado com sucesso! " + emoji.happy);
 				} else {
 					Notification.error(response.value, true);
 				}

@@ -213,7 +213,7 @@ export = class Usuario {
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
-				await sql.query("insert into usuario (login, nome, idcargo, senha, criacao) values (?, ?, ?, ?, now())", [u.login, u.nome, u.idcargo, appsettings.usuarioHashSenhaPadrao]);
+				await sql.query("insert into usuario (login, nome, idcargo, senha, criacao, ativo) values (?, ?, ?, ?, now(), ?)", [u.login, u.nome, u.idcargo, appsettings.usuarioHashSenhaPadrao, u.ativo]);
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {

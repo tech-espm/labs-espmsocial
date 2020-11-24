@@ -43,6 +43,17 @@ router.all("/login", wrap(async (req: express.Request, res: express.Response) =>
 	}
 }));
 
+// router.all("/cadastro", wrap(async (req: express.Request, res: express.Response) => {
+
+// 	res.render("usuario/alterar", {
+// 		titulo: "Editar Usuário",
+// 		usuario: u,
+// 		item: item,
+// 		cargos: await Cargo.listar()
+// 	});
+
+// }));
+
 router.get("/dashboard", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
 	if (!u)
@@ -61,7 +72,7 @@ router.get("/carteirinha/:id?", wrap(async (req: express.Request, res: express.R
 		if (!u)
 			res.redirect(appsettings.root + "/login");
 		else
-			res.render("home/carteirinha", { titulo: "Carteirinha", usuario: u });
+			res.render("home/carteirinha", { titulo: "Carteirinha", usuario: u, usuarios: await Usuario.listar() });
 	}
 }));
 

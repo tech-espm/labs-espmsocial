@@ -7,9 +7,9 @@ const router = express.Router();
 // Se utilizar router.xxx() mas não utilizar o wrap(), as exceções ocorridas
 // dentro da função async não serão tratadas!!!
 router.get("/listar", wrap(async (req: express.Request, res: express.Response) => {​​​​​​​
-    //let u = await Usuario.cookie(req, res);
-    //if (!u)
-    //  return;
+    let u = await Usuario.cookie(req, res);
+    if (!u)
+     return;
     res.json(await Orientador.listar());
 }​​​​​​​));
 router.get("/obter/:id", wrap(async (req: express.Request, res: express.Response) => {​​​​​​​
@@ -29,9 +29,9 @@ router.get("/obter/:id", wrap(async (req: express.Request, res: express.Response
     }​​​​​​​
 }​​​​​​​));
 router.post("/criar", wrap(async (req: express.Request, res: express.Response) => {​​​​​​​
-    //let u = await Usuario.cookie(req, res, true);
-    //if (!u)
-    //  return;
+    let u = await Usuario.cookie(req, res, true);
+    if (!u)
+     return;
     let orientador = req.body as Orientador;
     let erro = await Orientador.criar(orientador);
     if (erro) {​​​​​​​
