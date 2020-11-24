@@ -1,2 +1,14 @@
-body {
+.panel-info > .panel-heading, .panel-info > .panel-footer {
+	background: #00ace3;
+	color: #fff;
+	text-align: center;
+	font-size: 25px;
+	line-height: 25px;
+	font-weight: bold;
+	padding: 25px;
+}
+
+.page-header {
+	color: #00ace3;
+	border-bottom-color: #00ace3;
 }

@@ -1,36 +1,22 @@
-﻿<head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	
-	<title>Título da Página</title>
+﻿<div class="row">
+	<div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 
-	<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap" rel="stylesheet">
-</head>
-
-	<body>
-
-	<h1 class=beneficios>
-	 Carteirinha Digital
-	</h1>
-
-	<div class = "fundos">
-		<h1 class=nomeesobrenome> MEMBRO </h1>
-
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="panel panel-default">
-					<div class="panel-body">
-							
-						<div id="qrcode"></div>						
-					</div>
-				</div>
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<%= usuario.nome %>
+			</div>
+			<div class="panel-body">
+				<div id="qrcode"></div>
+			</div>
+			<div class="panel-footer text-center">
+				Validade
 			</div>
 		</div>
+		
 
-		<h2 class=validade> Validade </h2>
 	</div>
+</div>
 
-</body>
 	
 	<%- contentFor("styles") %>
 	<style type="text/css">
@@ -38,40 +24,8 @@
 			display: block;
 			margin: 30px auto 30px;
 			width: 250px;
+			max-width: 100%;
 		}
-	
-			
-
-		.beneficios{
-			color: #00ace3;
-			text-align: center;
-			font-family: Quicksand;
-			font-size: 50px;
-			font-weight: 700;
-		}
-		.fundos{
-			background: #00ace3;
-			width: 600px;
-			height: 500px;
-			margin: 0 auto;
-			margin-bottom: 50px;
-		}
-	
-		.nomeesobrenome{
-			text-align: center;
-			color: white;
-			font-family: Quicksand;
-			padding: 20px 0px 0px 0px;
-		}
-		.validade{
-			text-align: center;
-			color: white;
-			font-family: Quicksand;
-			font-style: italic;
-			padding 0px 0px 0px 0px;
-		}
-
-	
 	</style>
 
 	<%- contentFor("scripts") %>

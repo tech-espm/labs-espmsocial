@@ -6,7 +6,11 @@ import appsettings = require("../appsettings");
 const router = express.Router();
 
 router.all("/", wrap(async (req: express.Request, res: express.Response) => {
-	res.render("home/index", { layout: "layout-externo" });
+	let u = await Usuario.cookie(req);
+	if (!u)
+		res.redirect(appsettings.root + "/login");
+	else
+		res.render("home/dashboard", { titulo: "Dashboard", usuario: u });
 }));
 
 // TELAS QUE A BIA FEZ:
@@ -34,12 +38,12 @@ router.all("/login", wrap(async (req: express.Request, res: express.Response) =>
 			if (mensagem)
 				res.render("home/login", { layout: "layout-externo", mensagem: mensagem });
 			else
-				res.redirect(appsettings.root + "/dashboard");
+				res.redirect(appsettings.root + "/");
 		} else {
 			res.render("home/login", { layout: "layout-externo", mensagem: null });
 		}
 	} else {
-		res.redirect(appsettings.root + "/dashboard");
+		res.redirect(appsettings.root + "/");
 	}
 }));
 
@@ -54,14 +58,6 @@ router.all("/login", wrap(async (req: express.Request, res: express.Response) =>
 
 // }));
 
-router.get("/dashboard", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req);
-	if (!u)
-		res.redirect(appsettings.root + "/login");
-	else
-		res.render("home/dashboard", { titulo: "Dashboard", usuario: u });
-}));
-
 router.get("/carteirinha/:id?", wrap(async (req: express.Request, res: express.Response) => {
 	let id = parseInt(req.params["id"]);
 	if (id) {
@@ -72,7 +68,7 @@ router.get("/carteirinha/:id?", wrap(async (req: express.Request, res: express.R
 		if (!u)
 			res.redirect(appsettings.root + "/login");
 		else
-			res.render("home/carteirinha", { titulo: "Carteirinha", usuario: u, usuarios: await Usuario.listar() });
+			res.render("home/carteirinha", { titulo: "Carteirinha", usuario: u });
 	}
 }));
 
