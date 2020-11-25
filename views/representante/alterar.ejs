@@ -1,7 +1,7 @@
 
 <div class="row">
 	<div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-		<form id="form" class="panel panel-default" action="#">
+		<form id="form" class="panel panel-info" action="#">
 			<div class="panel-heading">Informações do Representante</div>
 			<div class="panel-body no-bottom">
 				<input type="hidden" id="id" name="id" value="<%=(item ? item.id : 0) %>" />
@@ -24,22 +24,22 @@
                 <div class="form-group">
 					<label for="criacao">Criação</label>
 					<input id="criacao" name="nome" class="form-control" type="date" spellcheck="false" value="<%=(item ? item.criacao : '') %>" />
-                </div>
-			</div>
-
-			<div class="panel panel-default">
-				<div class="panel-heading">ONG</div>
-				<div class="panel-body">
-					<% for (let i = 0; i < ongs.length; i++) { %>
-						<div class="checkbox">
-							<label><input type="checkbox" name="ongs" value="<%=ongs[i].id %>" <%=((item && item.ongs && item.ongs.indexOf(ongs[i].id) >= 0) ? 'checked="checked"' : '') %> /> <%=ongs[i].nome %></label>
-						</div>
-					<% } %>
+				</div>
+				<div class="form-group">
+					<label for="idong">ONG</label>
+					<select id="idong" name="idong" class="form-control" size="1">
+						<option value="">SELECIONE...</option>
+						<% for (let i = 0; i < ongs.length; i++) { %>
+						<option value="<%= ongs[i].id %>" <%-((item && item.idong === ongs[i].id) ? 'selected="selected"' : '') %>><%= ongs[i].nome %></option>
+						<% } %>
+					</select>
 				</div>
 			</div>
 
+
+
 			<div class="panel-footer">
-				<input value="<%=(item ? 'Salvar Alterações' : 'Criar Representante') %>" class="btn btn-primary btn-lg btn-block" type="submit" />
+				<input value="<%=(item ? 'Salvar Alterações' : 'Criar Representante') %>" class="btn btn-default btn-outline btn-lg btn-block" type="submit" />
 			</div>
 		</form>
 	</div>

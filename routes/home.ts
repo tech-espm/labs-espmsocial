@@ -47,16 +47,13 @@ router.all("/login", wrap(async (req: express.Request, res: express.Response) =>
 	}
 }));
 
-// router.all("/cadastro", wrap(async (req: express.Request, res: express.Response) => {
+router.all("/cadastro", wrap(async (req: express.Request, res: express.Response) => {
+	res.render("home/cadastro", { layout: "layout-simples" });
+}));
 
-// 	res.render("usuario/alterar", {
-// 		titulo: "Editar Usuário",
-// 		usuario: u,
-// 		item: item,
-// 		cargos: await Cargo.listar()
-// 	});
-
-// }));
+router.all("/beneficio", wrap(async (req: express.Request, res: express.Response) => {
+	res.render("home/beneficio", { layout: "layout-simples" });
+}));
 
 router.get("/carteirinha/:id?", wrap(async (req: express.Request, res: express.Response) => {
 	let id = parseInt(req.params["id"]);
