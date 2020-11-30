@@ -24,6 +24,59 @@
 				</div>
 
 				<div class="form-group">
+					<label for="idequipe">Equipe</label>
+					<select id="idequipe" name="idequipe" class="form-control" size="1">
+						<option value="">SELECIONE...</option>
+						<% for (let i = 0; i < equipes.length; i++) { %>
+						<option value="<%= equipes[i].id %>" <%-((item && item.idequipe === equipes[i].id) ? 'selected="selected"' : '') %>><%= equipes[i].nome %></option>
+						<% } %>
+					</select>
+				</div>
+
+				
+                <div class="form-group">
+					<label for="email">Email</label>
+					<input id="email" name="email" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.email : '') %>" />
+				</div>
+				
+				<div class="form-group">
+					<label for="telefone">Telefone</label>
+					<input id="telefone" name="telefone" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.telefone : '') %>" />
+				</div>
+				<div class="form-group">
+					<label for="whatsapp">Whatsapp</label>
+					<input id="whatsapp" name="whatsapp" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.whatsapp : '') %>" />
+				</div>
+				<div class="form-group">
+					<label for="curso">Curso</label>
+					<input id="curso" name="curso" maxlength="50" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.curso : '') %>" />
+				</div>		
+
+				<div class="form-group">
+					<label for="periodo_entrada">Período Entrada</label>
+					<input id="periodo_entrada" name="periodo_entrada" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.periodo_entrada : '') %>" />
+				</div>
+				<div class="form-group">
+					<label for="periodo_saida">Período Saída</label>
+					<input id="periodo_saida" name="periodo_saida" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.periodo_saida : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="semestre_entrada">Semestre Entrada</label>
+					<input id="semestre_entrada" name="semestre_entrada" maxlength="20" class="form-control" type="int" spellcheck="false" value="<%=(item ? item.semestre_entrada : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="semestre_saida">Semestre Saída</label>
+					<input id="semestre_saida" name="semestre_saida" maxlength="20" class="form-control" type="int" spellcheck="false" value="<%=(item ? item.semestre_saida : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="semestre_atual">Semestre Atual</label>
+					<input id="semestre_atual" name="semestre_atual" maxlength="20" class="form-control" type="int" spellcheck="false" value="<%=(item ? item.semestre_atual : '') %>" />
+				</div>
+
+				<div class="form-group">
 					<label for="ativo">Ativo</label>
 					<select id="ativo" name="ativo" size="1" class="form-control">
 						<option value="">SELECIONE...</option>
@@ -58,6 +111,52 @@
 				maxlength: 100
 			},
 			idcargo: {
+				required: true
+			},
+			idequipe: {
+				required: true
+			},
+			email: {
+				required: true,
+				minlength: 3,
+				maxlength: 100
+            } ,
+
+			telefone: {
+				required: true,
+				minlength: 3,
+				maxlength: 20
+			} ,
+			whatsapp: {
+				required: true,
+				minlength: 3,
+				maxlength: 20
+			} ,
+			curso: {
+				required: true,
+				minlength: 3,
+				maxlength: 50
+			} ,
+			periodo_entrada: {
+				required: true,
+				minlength: 3,
+				maxlength: 20
+			} ,
+			periodo_saida: {
+				required: true,
+				minlength: 3,
+				maxlength: 20
+			} ,
+			semestre_entrada: {
+				required: true
+			},
+			semestre_saida: {
+				required: true
+			},
+			semestre_atual: {
+				required: true
+			},
+			ativo:{
 				required: true
 			}
 		},

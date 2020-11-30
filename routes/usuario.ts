@@ -1,6 +1,7 @@
 ﻿import express = require("express");
 import wrap = require("express-async-error-wrapper");
 import Cargo = require("../models/cargo");
+import Equipe = require("../models/equipe");
 import Usuario = require("../models/usuario");
 import appsettings = require("../appsettings");
 
@@ -15,7 +16,8 @@ router.all("/criar", wrap(async (req: express.Request, res: express.Response) =>
 			titulo: "Criar Usuário",
 			usuario: u,
 			item: null,
-			cargos: await Cargo.listar()
+			cargos: await Cargo.listar(), 
+			equipes: await Equipe.listar()
 		});
 }));
 
@@ -33,7 +35,8 @@ router.all("/alterar", wrap(async (req: express.Request, res: express.Response) 
 				titulo: "Editar Usuário",
 				usuario: u,
 				item: item,
-				cargos: await Cargo.listar()
+				cargos: await Cargo.listar(),
+				equipes: await Equipe.listar()
 			});
 	}
 }));

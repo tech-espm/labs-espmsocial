@@ -179,6 +179,46 @@ export = class Usuario {
 		if (isNaN(u.idcargo))
 			return "Cargo inválido";
 
+		u.idequipe = parseInt(u.idequipe as any);
+		if (isNaN(u.idequipe))
+			return "Equipe inválida";
+			
+		u.email = (u.email || "").normalize().trim();
+		if (u.email.length < 3 || u.email.length > 100)
+			return "Email inválido";
+			
+		u.telefone = (u.telefone || "").normalize().trim();
+		if (u.telefone.length < 3 || u.telefone.length > 20)
+			return "Telefone inválido";
+					
+		u.whatsapp = (u.whatsapp || "").normalize().trim();
+		if (u.whatsapp.length < 3 || u.whatsapp.length > 20)
+			return "Whatsapp inválido";	
+
+		u.curso = (u.curso || "").normalize().trim();
+		if (u.curso.length < 3 || u.curso.length > 50)
+			return "Curso inválido";	
+
+		u.periodo_entrada = (u.periodo_entrada || "").normalize().trim();
+		if (u.periodo_entrada.length < 3 || u.periodo_entrada.length > 20)
+			return "Período inválido";			
+								
+		u.periodo_saida = (u.periodo_saida || "").normalize().trim();
+		if (u.periodo_saida.length < 3 || u.periodo_saida.length > 20)
+			return "Período inválido";
+				
+		u.semestre_entrada = parseInt(u.semestre_entrada as any);
+		if (isNaN(u.semestre_entrada))
+			return "Semestre inválido";
+			
+		u.semestre_saida = parseInt(u.semestre_saida as any);
+		if (isNaN(u.semestre_saida))
+			return "Semestre inválido";	
+
+		u.semestre_atual = parseInt(u.semestre_atual as any);
+		if (isNaN(u.semestre_atual))
+			return "Semestre inválido";	
+			
 		return null;
 	}
 
@@ -186,7 +226,7 @@ export = class Usuario {
 		let lista: Usuario[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select u.id, u.login, u.nome, c.nome cargo, date_format(u.criacao, '%d/%m/%Y') criacao, ativo from usuario u inner join cargo c on c.id = u.idcargo order by u.login asc") as Usuario[];
+			lista = await sql.query("select u.id, u.login, u.nome, c.nome cargo, e.nome,  date_format(u.criacao, '%d/%m/%Y') criacao, email, telefone, whatsapp, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo from usuario u inner join cargo c on (c.id = u.idcargo) inner join equipe e on (e.id = u.idequipe) order by u.login asc") as Usuario[];
 		});
 
 		return (lista || []);
@@ -196,7 +236,7 @@ export = class Usuario {
 		let lista: Usuario[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select id, login, nome, idcargo, date_format(criacao, '%d/%m/%Y') criacao, ativo from usuario where id = ?", [id]) as Usuario[];
+			lista = await sql.query("select id, login, nome, idcargo, idequipe, date_format(criacao, '%d/%m/%Y') criacao, email, telefone, whatsapp, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo from usuario where id = ?", [id]) as Usuario[];
 		});
 
 		return ((lista && lista[0]) || null);
@@ -213,7 +253,7 @@ export = class Usuario {
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
-				await sql.query("insert into usuario (login, nome, idcargo, senha, criacao, ativo) values (?, ?, ?, ?, now(), ?)", [u.login, u.nome, u.idcargo, appsettings.usuarioHashSenhaPadrao, u.ativo]);
+				await sql.query("insert into usuario (login, nome, idcargo, idequipe, senha, criacao,email, telefone, whatsapp, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) values (?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?)", [u.login, u.nome, u.idcargo,u.idequipe, appsettings.usuarioHashSenhaPadrao, u.email, u.telefone, u.whatsapp, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo]);
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {
@@ -245,7 +285,7 @@ export = class Usuario {
 			return "Não é possível editar o usuário administrador principal";
 
 		await Sql.conectar(async (sql: Sql) => {
-			await sql.query("update usuario set nome = ?, idcargo = ? where id = ?", [u.nome, u.idcargo, u.id]);
+			await sql.query("update usuario set nome = ?, idcargo = ?, idequipe = ?, email = ?, telefone=?, whatsapp=?, curso=?, periodo_entrada=?, periodo_saida=?, semestre_entrada=?, semestre_saida=?, semestre_atual=?, ativo=? where id = ?", [u.nome, u.idcargo, u.idequipe, u.email, u.telefone, u.whatsapp, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo, u.id]);
 			res = sql.linhasAfetadas.toString();
 		});
 

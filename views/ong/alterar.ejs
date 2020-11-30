@@ -1,8 +1,8 @@
 
 <div class="row">
 	<div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-		<form id="form" action="#">
-			<div class="panel panel-info">
+		<form id="form" class="panel panel-info" action="#">
+		
 				<div class="panel-heading">Informações da ONG</div>
 				<div class="panel-body no-bottom">
 					<input type="hidden" id="id" name="id" value="<%=(item ? item.id : 0) %>" />
@@ -32,19 +32,21 @@
 						</select>
 					</div>
 				</div>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">Causas</div>
-				<div class="panel-body">
-					<% for (let i = 0; i < causas.length; i++) { %>
-						<div class="checkbox">
-							<label><input type="checkbox" name="causas" value="<%=causas[i].id %>" <%=((item && item.causas && item.causas.indexOf(causas[i].id) >= 0) ? 'checked="checked"' : '') %> /> <%=causas[i].nome %></label>
-						</div>
-					<% } %>
-				</div>
-			</div>
 
-			<input value="<%=(item ? 'Salvar Alterações' : 'Criar ONG') %>" class="btn btn-default btn-lg btn-block col-xs-space-bottom" type="submit" />
+			
+					<div class="panel-heading">Causas</div>
+					<div class="panel-body">
+						<% for (let i = 0; i < causas.length; i++) { %>
+							<div class="checkbox">
+								<label><input type="checkbox" name="causas" value="<%=causas[i].id %>" <%=((item && item.causas && item.causas.indexOf(causas[i].id) >= 0) ? 'checked="checked"' : '') %> /> <%=causas[i].nome %></label>
+							</div>
+						<% } %>
+					</div>
+				
+			
+			<div class="panel-footer">
+				<input value="<%=(item ? 'Salvar Alterações' : 'Criar ONG') %>" class="btn btn-default btn-outline btn-lg btn-block" type="submit" />
+			</div>	
 		</form>
 	</div>
 </div>

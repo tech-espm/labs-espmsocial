@@ -3,12 +3,17 @@
 	color: #fff;
 	text-align: center;
 	font-size: 25px;
-	line-height: 25px;
+	line-height: 28px;
 	font-weight: bold;
-	padding: 25px;
+	padding: 18px;
 }
 
 .page-header {
 	color: #00ace3;
 	border-bottom-color: #00ace3;
+}
+
+.btn-sla:hover {
+	background-color: #4CAF50; 
+	color: white;
 }
