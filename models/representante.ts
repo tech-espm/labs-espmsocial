@@ -4,7 +4,7 @@ export = class Representante {
 
 	public id: number;
     public nome: string;
-    public idong : number;
+    public idong: number;
     public email: string;
     public telefone: string;
     public whatsapp: string;

@@ -42,12 +42,10 @@
             { title: "Endereco", render: encode, data: "endereco" },
             { title: "Email", render: encode, data: "email" },
             { title: "Criação", "class": "col-min", "type": "customdateint", data: "criacao" },
-            { title: "Ativo", "class": "col-min", render: function (v, type, row) { return (v ? '<span class="col-h2">Sim</span>' : "Não");  }, data: "ativo" }
+            { title: "Ativa", "class": "col-min", render: function (v, type, row) { return (v ? '<span class="col-h2">Sim</span>' : "Não");  }, data: "ativo" }
 		],
 		data: <%- lista %>,
 		export: { title: "ONG" },
-	
-
 	});
 	var trClicada;
 

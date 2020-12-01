@@ -182,43 +182,53 @@ export = class Usuario {
 		u.idequipe = parseInt(u.idequipe as any);
 		if (isNaN(u.idequipe))
 			return "Equipe inválida";
-			
+
 		u.email = (u.email || "").normalize().trim();
 		if (u.email.length < 3 || u.email.length > 100)
 			return "Email inválido";
-			
+
 		u.telefone = (u.telefone || "").normalize().trim();
 		if (u.telefone.length < 3 || u.telefone.length > 20)
 			return "Telefone inválido";
-					
+
 		u.whatsapp = (u.whatsapp || "").normalize().trim();
 		if (u.whatsapp.length < 3 || u.whatsapp.length > 20)
-			return "Whatsapp inválido";	
+			return "Whatsapp inválido";
 
 		u.curso = (u.curso || "").normalize().trim();
 		if (u.curso.length < 3 || u.curso.length > 50)
-			return "Curso inválido";	
+			return "Curso inválido";
 
 		u.periodo_entrada = (u.periodo_entrada || "").normalize().trim();
 		if (u.periodo_entrada.length < 3 || u.periodo_entrada.length > 20)
-			return "Período inválido";			
-								
+			return "Período de entrada inválido";
+
 		u.periodo_saida = (u.periodo_saida || "").normalize().trim();
-		if (u.periodo_saida.length < 3 || u.periodo_saida.length > 20)
-			return "Período inválido";
-				
+		if (u.periodo_saida.length > 20)
+			return "Período de saída inválido";
+
 		u.semestre_entrada = parseInt(u.semestre_entrada as any);
-		if (isNaN(u.semestre_entrada))
-			return "Semestre inválido";
-			
-		u.semestre_saida = parseInt(u.semestre_saida as any);
-		if (isNaN(u.semestre_saida))
-			return "Semestre inválido";	
+		if (isNaN(u.semestre_entrada) || u.semestre_entrada <= 0 || u.semestre_entrada > 12)
+			return "Semestre de entrada inválido";
+
+		if (!u.semestre_saida) {
+			u.semestre_saida = null;
+		} else {
+			u.semestre_saida = parseInt(u.semestre_saida as any);
+			if (isNaN(u.semestre_saida) || u.semestre_saida < u.semestre_entrada || u.semestre_saida > 12)
+				return "Semestre de saída inválido";
+		}
 
 		u.semestre_atual = parseInt(u.semestre_atual as any);
-		if (isNaN(u.semestre_atual))
-			return "Semestre inválido";	
-			
+		if (isNaN(u.semestre_atual) || u.semestre_atual < u.semestre_entrada || u.semestre_atual > 12 || (u.semestre_saida && u.semestre_atual !== u.semestre_saida))
+			return "Semestre atual inválido";
+
+		if (u.periodo_saida && !u.semestre_saida)
+			return "Semestre de saída é obrigatório se o período de saída for fornecido";
+
+		if (!u.periodo_saida && u.semestre_saida)
+			return "Período de saída é obrigatório se o semestre de saída for fornecido";
+
 		return null;
 	}
 
@@ -253,7 +263,7 @@ export = class Usuario {
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
-				await sql.query("insert into usuario (login, nome, idcargo, idequipe, senha, criacao,email, telefone, whatsapp, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) values (?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?)", [u.login, u.nome, u.idcargo,u.idequipe, appsettings.usuarioHashSenhaPadrao, u.email, u.telefone, u.whatsapp, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo]);
+				await sql.query("insert into usuario (login, nome, idcargo, idequipe, senha, criacao, email, telefone, whatsapp, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) values (?, ?, ?, ?, ?, now(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [u.login, u.nome, u.idcargo, u.idequipe, appsettings.usuarioHashSenhaPadrao, u.email, u.telefone, u.whatsapp, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo]);
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {
@@ -262,7 +272,7 @@ export = class Usuario {
 							break;
 						case "ER_NO_REFERENCED_ROW":
 						case "ER_NO_REFERENCED_ROW_2":
-							res = "Cargo não encontrado";
+							res = "Cargo ou equipe não encontrado";
 							break;
 						default:
 							throw e;
@@ -285,8 +295,26 @@ export = class Usuario {
 			return "Não é possível editar o usuário administrador principal";
 
 		await Sql.conectar(async (sql: Sql) => {
-			await sql.query("update usuario set nome = ?, idcargo = ?, idequipe = ?, email = ?, telefone=?, whatsapp=?, curso=?, periodo_entrada=?, periodo_saida=?, semestre_entrada=?, semestre_saida=?, semestre_atual=?, ativo=? where id = ?", [u.nome, u.idcargo, u.idequipe, u.email, u.telefone, u.whatsapp, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo, u.id]);
-			res = sql.linhasAfetadas.toString();
+			try {
+				await sql.query("update usuario set nome = ?, idcargo = ?, idequipe = ?, email = ?, telefone=?, whatsapp=?, curso=?, periodo_entrada=?, periodo_saida=?, semestre_entrada=?, semestre_saida=?, semestre_atual=?, ativo=? where id = ?", [u.nome, u.idcargo, u.idequipe, u.email, u.telefone, u.whatsapp, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo, u.id]);
+				res = sql.linhasAfetadas.toString();
+			} catch (e) {
+				if (e.code) {
+					switch (e.code) {
+						case "ER_DUP_ENTRY":
+							res = `O login ${u.login} já está em uso`;
+							break;
+						case "ER_NO_REFERENCED_ROW":
+						case "ER_NO_REFERENCED_ROW_2":
+							res = "Cargo ou equipe não encontrado";
+							break;
+						default:
+							throw e;
+					}
+				} else {
+					throw e;
+				}
+			}
 		});
 
 		return res;

@@ -13,7 +13,6 @@
 	border-bottom-color: #00ace3;
 }
 
-.btn-sla:hover {
-	background-color: #4CAF50; 
-	color: white;
+.panel-info .btn-primary.btn-outline {
+	color: #fff;
 }

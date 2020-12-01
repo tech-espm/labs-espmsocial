@@ -5,14 +5,17 @@
 			<div class="panel-heading">Informações do Usuário</div>
 			<div class="panel-body no-bottom">
 				<input type="hidden" id="id" name="id" value="<%=(item ? item.id : 0) %>" />
+
 				<div class="form-group">
 					<label for="login">Login</label>
 					<input id="login" name="login" maxlength="100" class="form-control lower" type="text" spellcheck="false" value="<%=(item ? item.login : '') %>" <%=(item ? 'readonly="readonly"' : '') %> />
 				</div>
+
 				<div class="form-group">
 					<label for="nome">Nome</label>
 					<input id="nome" name="nome" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.nome : '') %>" />
 				</div>
+
 				<div class="form-group">
 					<label for="idcargo">Cargo</label>
 					<select id="idcargo" name="idcargo" class="form-control" size="1">
@@ -33,47 +36,65 @@
 					</select>
 				</div>
 
-				
                 <div class="form-group">
 					<label for="email">Email</label>
 					<input id="email" name="email" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.email : '') %>" />
 				</div>
 				
-				<div class="form-group">
-					<label for="telefone">Telefone</label>
-					<input id="telefone" name="telefone" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.telefone : '') %>" />
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="telefone">Telefone</label>
+							<input id="telefone" name="telefone" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.telefone : '') %>" />
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="whatsapp">Whatsapp</label>
+							<input id="whatsapp" name="whatsapp" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.whatsapp : '') %>" />
+						</div>
+					</div>
 				</div>
-				<div class="form-group">
-					<label for="whatsapp">Whatsapp</label>
-					<input id="whatsapp" name="whatsapp" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.whatsapp : '') %>" />
-				</div>
+
 				<div class="form-group">
 					<label for="curso">Curso</label>
 					<input id="curso" name="curso" maxlength="50" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.curso : '') %>" />
 				</div>		
 
-				<div class="form-group">
-					<label for="periodo_entrada">Período Entrada</label>
-					<input id="periodo_entrada" name="periodo_entrada" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.periodo_entrada : '') %>" />
-				</div>
-				<div class="form-group">
-					<label for="periodo_saida">Período Saída</label>
-					<input id="periodo_saida" name="periodo_saida" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.periodo_saida : '') %>" />
-				</div>
-
-				<div class="form-group">
-					<label for="semestre_entrada">Semestre Entrada</label>
-					<input id="semestre_entrada" name="semestre_entrada" maxlength="20" class="form-control" type="int" spellcheck="false" value="<%=(item ? item.semestre_entrada : '') %>" />
-				</div>
-
-				<div class="form-group">
-					<label for="semestre_saida">Semestre Saída</label>
-					<input id="semestre_saida" name="semestre_saida" maxlength="20" class="form-control" type="int" spellcheck="false" value="<%=(item ? item.semestre_saida : '') %>" />
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="periodo_entrada">Período Entrada</label>
+							<input id="periodo_entrada" name="periodo_entrada" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.periodo_entrada : '') %>" />
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="periodo_saida">Período Saída</label>
+							<input id="periodo_saida" name="periodo_saida" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.periodo_saida : '') %>" />
+						</div>
+					</div>
 				</div>
 
-				<div class="form-group">
-					<label for="semestre_atual">Semestre Atual</label>
-					<input id="semestre_atual" name="semestre_atual" maxlength="20" class="form-control" type="int" spellcheck="false" value="<%=(item ? item.semestre_atual : '') %>" />
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="semestre_entrada">Semestre Entrada</label>
+							<input id="semestre_entrada" name="semestre_entrada" class="form-control" type="number" min="1" max="12" value="<%=(item ? item.semestre_entrada : '') %>" />
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="semestre_saida">Semestre Saída</label>
+							<input id="semestre_saida" name="semestre_saida" class="form-control" type="number" min="1" max="12" value="<%=(item ? item.semestre_saida : '') %>" />
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="semestre_atual">Semestre Atual</label>
+							<input id="semestre_atual" name="semestre_atual" class="form-control" type="number" min="1" max="12" value="<%=(item ? item.semestre_atual : '') %>" />
+						</div>
+					</div>
 				</div>
 
 				<div class="form-group">
@@ -87,7 +108,7 @@
 				
 			</div>
 			<div class="panel-footer">
-				<input value="<%=(item ? 'Salvar Alterações' : 'Criar Usuário') %>" class="btn btn-default btn-outline btn-lg btn-block" type="submit" />
+				<input value="<%=(item ? 'Salvar Alterações' : 'Criar Usuário') %>" class="btn btn-primary btn-outline btn-lg btn-block" type="submit" />
 			</div>
 		</form>
 	</div>
@@ -97,6 +118,9 @@
 <script type="text/javascript">
 	//<![CDATA[
 	"use strict";
+
+	formatarCelular("#telefone");
+	formatarCelular("#whatsapp");
 
 	$("#form").validate({
 		rules: {
@@ -119,9 +143,9 @@
 			email: {
 				required: true,
 				minlength: 3,
-				maxlength: 100
+				maxlength: 100,
+				email: true
             } ,
-
 			telefone: {
 				required: true,
 				minlength: 3,
@@ -143,18 +167,30 @@
 				maxlength: 20
 			} ,
 			periodo_saida: {
-				required: true,
-				minlength: 3,
+				required: function () {
+					return !!$("#semestre_saida").val();
+				},
 				maxlength: 20
 			} ,
 			semestre_entrada: {
-				required: true
+				required: true,
+				min: 1,
+				max: 12,
+				number: true
 			},
 			semestre_saida: {
-				required: true
+				required: function () {
+					return !!$("#periodo_saida").val();
+				},
+				min: 1,
+				max: 12,
+				number: true
 			},
 			semestre_atual: {
-				required: true
+				required: true,
+				min: 1,
+				max: 12,
+				number: true
 			},
 			ativo:{
 				required: true
