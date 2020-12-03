@@ -49,6 +49,8 @@
 	//<![CDATA[
 	"use strict";
 
+	formatarCelular("#telefone");
+
 	$("#form").validate({
 		rules: {
 			nome: {
@@ -69,7 +71,8 @@
             email: {
 				required: true,
 				minlength: 3,
-				maxlength: 100
+				maxlength: 100,
+				email: true
             }
 
 		},

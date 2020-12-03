@@ -45,7 +45,7 @@
 				
 			
 			<div class="panel-footer">
-				<input value="<%=(item ? 'Salvar Alterações' : 'Criar ONG') %>" class="btn btn-default btn-outline btn-lg btn-block" type="submit" />
+				<input value="<%=(item ? 'Salvar Alterações' : 'Criar ONG') %>" class="btn btn-primary btn-outline btn-lg btn-block" type="submit" />
 			</div>	
 		</form>
 	</div>
@@ -55,6 +55,8 @@
 <script type="text/javascript">
 	//<![CDATA[
 	"use strict";
+	
+	formatarCelular("#telefone");
 
 	$("#form").validate({
 		rules: {
