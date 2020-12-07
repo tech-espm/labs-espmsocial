@@ -36,9 +36,9 @@ CREATE TABLE usuario (
   whatsapp varchar(20) NOT NULL,
   curso varchar(50) NOT NULL,
   periodo_entrada varchar(20) NOT NULL, -- 2020/01 (Período do ano que o aluno se associou à Social)
-  periodo_saida varchar(20) NOT NULL, -- 2021/02 (Período do ano que o aluno saiu da Social)
+  periodo_saida varchar(20) NULL, -- 2021/02 (Período do ano que o aluno saiu da Social)
   semestre_entrada int NOT NULL, -- 1, 2 .... (Semestre que o aluno estava cursando quando se associou à Social)
-  semestre_saida int NOT NULL, -- 1, 2 .... (Semestre que o aluno estava cursando quando saiu da Social)
+  semestre_saida int NULL, -- 1, 2 .... (Semestre que o aluno estava cursando quando saiu da Social)
   semestre_atual int NOT NULL, -- 1, 2 .... (Semestre que o aluno está cursando "atualmente")
   ativo tinyint(4) NOT NULL,
   PRIMARY KEY (id),
