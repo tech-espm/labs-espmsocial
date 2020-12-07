@@ -22,6 +22,7 @@ export = class Usuario {
 	public email: string;
 	public telefone: string;
 	public whatsapp: string;
+	public rede_social: string;
 	public curso: string;
 	public periodo_entrada: string;
 	public periodo_saida: string;
@@ -195,6 +196,10 @@ export = class Usuario {
 		if (u.whatsapp.length < 3 || u.whatsapp.length > 20)
 			return "Whatsapp inválido";
 
+		u.rede_social = (u.rede_social || "").normalize().trim();
+		if (u.rede_social.length < 3 || u.rede_social.length > 100)
+			return "Rede Social inválida";	
+
 		u.curso = (u.curso || "").normalize().trim();
 		if (u.curso.length < 3 || u.curso.length > 50)
 			return "Curso inválido";
@@ -236,7 +241,7 @@ export = class Usuario {
 		let lista: Usuario[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select u.id, u.login, u.nome, c.nome cargo, e.nome equipe, date_format(u.criacao, '%d/%m/%Y') criacao, u.email, u.telefone, u.whatsapp, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo from usuario u inner join cargo c on (c.id = u.idcargo) inner join equipe e on (e.id = u.idequipe) order by u.login asc") as Usuario[];
+			lista = await sql.query("select u.id, u.login, u.nome, c.nome cargo, e.nome equipe, date_format(u.criacao, '%d/%m/%Y') criacao, u.email, u.telefone, u.whatsapp, u.rede_social, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo from usuario u inner join cargo c on (c.id = u.idcargo) inner join equipe e on (e.id = u.idequipe) order by u.login asc") as Usuario[];
 		});
 
 		return (lista || []);
@@ -246,7 +251,7 @@ export = class Usuario {
 		let lista: Usuario[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select id, login, nome, idcargo, idequipe, date_format(criacao, '%d/%m/%Y') criacao, email, telefone, whatsapp, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo from usuario where id = ?", [id]) as Usuario[];
+			lista = await sql.query("select id, login, nome, idcargo, idequipe, date_format(criacao, '%d/%m/%Y') criacao, email, telefone, whatsapp, rede_social, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo from usuario where id = ?", [id]) as Usuario[];
 		});
 
 		return ((lista && lista[0]) || null);
@@ -263,7 +268,7 @@ export = class Usuario {
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
-				await sql.query("insert into usuario (login, nome, idcargo, idequipe, senha, criacao, email, telefone, whatsapp, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) values (?, ?, ?, ?, ?, now(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [u.login, u.nome, u.idcargo, u.idequipe, appsettings.usuarioHashSenhaPadrao, u.email, u.telefone, u.whatsapp, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo]);
+				await sql.query("insert into usuario (login, nome, idcargo, idequipe, senha, criacao, email, telefone, whatsapp, rede_social, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) values (?, ?, ?, ?, ?, now(), ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?)", [u.login, u.nome, u.idcargo, u.idequipe, appsettings.usuarioHashSenhaPadrao, u.email, u.telefone, u.whatsapp, u.rede_social, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo]);
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {
@@ -296,7 +301,7 @@ export = class Usuario {
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
-				await sql.query("update usuario set nome = ?, idcargo = ?, idequipe = ?, email = ?, telefone=?, whatsapp=?, curso=?, periodo_entrada=?, periodo_saida=?, semestre_entrada=?, semestre_saida=?, semestre_atual=?, ativo=? where id = ?", [u.nome, u.idcargo, u.idequipe, u.email, u.telefone, u.whatsapp, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo, u.id]);
+				await sql.query("update usuario set nome = ?, idcargo = ?, idequipe = ?, email = ?, telefone=?, whatsapp=?, rede_social=?, curso=?, periodo_entrada=?, periodo_saida=?, semestre_entrada=?, semestre_saida=?, semestre_atual=?, ativo=? where id = ?", [u.nome, u.idcargo, u.idequipe, u.email, u.telefone, u.whatsapp, u.rede_social, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo, u.id]);
 				res = sql.linhasAfetadas.toString();
 			} catch (e) {
 				if (e.code) {
