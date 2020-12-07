@@ -50,6 +50,7 @@
 	"use strict";
 
 	formatarCelular("#telefone");
+	formatarCelular("#whatsapp");
 
 	$("#form").validate({
 		rules: {
@@ -61,7 +62,7 @@
            telefone: {
 				required: true,
 				minlength: 3,
-				maxlength: 100
+				maxlength: 20
             } ,
             endereco: {
 				required: true,
