@@ -7,16 +7,21 @@ import GeradorHash = require("../utils/geradorHash");
 import appsettings = require("../appsettings");
 import intToHex = require("../utils/intToHex");
 import Cargo = require("./cargo");
+import FS = require("../infra/fs");
+import Upload = require("../infra/upload");
 
 export = class Usuario {
 
 	private static readonly IdAdmin = 1;
+
+	public static readonly CaminhoRelativoPerfil = "public/imagens/perfil/";
 
 	public id: number;
 	public login: string;
 	public nome: string;
 	public idcargo: number;
 	public idequipe: number;
+	public versao: number;
 	public senha: string;
 	public criacao: string;
 	public email: string;
@@ -51,7 +56,7 @@ export = class Usuario {
 			let usuario: Usuario = null;
 
 			await Sql.conectar(async (sql: Sql) => {
-				let rows = await sql.query("select id, login, nome, idcargo, token from usuario where id = ?", [id]);
+				let rows = await sql.query("select id, login, nome, idcargo, versao, token from usuario where id = ?", [id]);
 				let row;
 
 				if (!rows || !rows.length || !(row = rows[0]))
@@ -67,6 +72,7 @@ export = class Usuario {
 				u.login = row.login as string;
 				u.nome = row.nome as string;
 				u.idcargo = row.idcargo as number;
+				u.versao = row.versao as number;
 				u.admin = (u.idcargo === Cargo.IdAdministrador);
 
 				usuario = u;
@@ -134,7 +140,7 @@ export = class Usuario {
 		});
 	}
 
-	public async alterarPerfil(res: express.Response, nome: string, senhaAtual: string, novaSenha: string): Promise<string> {
+	public async alterarPerfil(res: express.Response, nome: string, senhaAtual: string, novaSenha: string, imagemPerfil: string): Promise<string> {
 		nome = (nome || "").normalize().trim();
 		if (nome.length < 3 || nome.length > 100)
 			return "Nome inválido";
@@ -165,6 +171,31 @@ export = class Usuario {
 				await sql.query("update usuario set nome = ? where id = ?", [nome, this.id]);
 
 				this.nome = nome;
+			}
+
+			if (imagemPerfil) {
+				if (!imagemPerfil.startsWith("data:image/jpeg;base64,") || imagemPerfil.length === 23) {
+					r = (senhaAtual ? "A senha foi alterada com sucesso, mas a imagem de perfil é inválida" : "Imagem de perfil inválida");
+					return;
+				}
+
+				if (imagemPerfil.length > (23 + (256 * 1024 * 4 / 3))) {
+					r = (senhaAtual ? "A senha foi alterada com sucesso, mas a imagem de perfil é muito grande" : "Imagem de perfil muito grande");
+					return;
+				}
+
+				try {
+					await Upload.gravarArquivo({
+						buffer: Buffer.from(imagemPerfil.substr(23), "base64")
+					}, Usuario.CaminhoRelativoPerfil, this.id + ".jpg");
+
+					this.versao++;
+
+					await sql.query("update usuario set versao = ? where id = ?", [this.versao, this.id]);
+				} catch (ex) {
+					r = (senhaAtual ? "A senha foi alterada com sucesso, mas ocorreu um erro ao gravar a imagem de perfil" : "Erro ao gravar a imagem de perfil");
+					return;
+				}
 			}
 		});
 
@@ -241,7 +272,7 @@ export = class Usuario {
 		let lista: Usuario[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select u.id, u.login, u.nome, c.nome cargo, e.nome equipe, date_format(u.criacao, '%d/%m/%Y') criacao, u.email, u.telefone, u.whatsapp, u.rede_social, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo from usuario u inner join cargo c on (c.id = u.idcargo) inner join equipe e on (e.id = u.idequipe) order by u.login asc") as Usuario[];
+			lista = await sql.query("select u.id, u.login, u.nome, c.nome cargo, e.nome equipe, u.versao, date_format(u.criacao, '%d/%m/%Y') criacao, u.email, u.telefone, u.whatsapp, u.rede_social, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo from usuario u inner join cargo c on (c.id = u.idcargo) inner join equipe e on (e.id = u.idequipe) order by u.login asc") as Usuario[];
 		});
 
 		return (lista || []);
@@ -251,7 +282,7 @@ export = class Usuario {
 		let lista: Usuario[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select id, login, nome, idcargo, idequipe, date_format(criacao, '%d/%m/%Y') criacao, email, telefone, whatsapp, rede_social, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo from usuario where id = ?", [id]) as Usuario[];
+			lista = await sql.query("select id, login, nome, idcargo, idequipe, versao, date_format(criacao, '%d/%m/%Y') criacao, email, telefone, whatsapp, rede_social, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo from usuario where id = ?", [id]) as Usuario[];
 		});
 
 		return ((lista && lista[0]) || null);
@@ -268,7 +299,7 @@ export = class Usuario {
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
-				await sql.query("insert into usuario (login, nome, idcargo, idequipe, senha, criacao, email, telefone, whatsapp, rede_social, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) values (?, ?, ?, ?, ?, now(), ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?)", [u.login, u.nome, u.idcargo, u.idequipe, appsettings.usuarioHashSenhaPadrao, u.email, u.telefone, u.whatsapp, u.rede_social, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo]);
+				await sql.query("insert into usuario (login, nome, idcargo, idequipe, versao, senha, criacao, email, telefone, whatsapp, rede_social, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) values (?, ?, ?, ?, 0, ?, now(), ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?)", [u.login, u.nome, u.idcargo, u.idequipe, appsettings.usuarioHashSenhaPadrao, u.email, u.telefone, u.whatsapp, u.rede_social, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo]);
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {
@@ -332,8 +363,12 @@ export = class Usuario {
 		let res: string = null;
 
 		await Sql.conectar(async (sql: Sql) => {
+			id = parseInt(id as any);
 			await sql.query("delete from usuario where id = ?", [id]);
-			res = sql.linhasAfetadas.toString();
+			if (sql.linhasAfetadas)
+				FS.excluirArquivo(Usuario.CaminhoRelativoPerfil + id + ".jpg");
+			else
+				res = "Usuário não encontrado";
 		});
 
 		return res;

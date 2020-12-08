@@ -28,6 +28,7 @@ CREATE TABLE usuario (
   nome varchar(100) NOT NULL,
   idcargo int NOT NULL,
   idequipe int NOT NULL,
+  versao int NOT NULL,
   senha varchar(100) NOT NULL,
   token char(32) DEFAULT NULL,
   criacao datetime NOT NULL,
