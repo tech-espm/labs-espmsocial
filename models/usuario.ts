@@ -106,7 +106,7 @@ export = class Usuario {
 		await Sql.conectar(async (sql: Sql) => {
 			login = login.normalize().trim().toLowerCase();
 
-			let rows = await sql.query("select id, nome, idcargo, senha from usuario where login = ?", [login]);
+			let rows = await sql.query("select id, nome, idcargo, versao, senha from usuario where login = ?", [login]);
 			let row;
 			let ok: boolean;
 
@@ -124,6 +124,7 @@ export = class Usuario {
 			u.login = login;
 			u.nome = row.nome as string;
 			u.idcargo = row.idcargo as number;
+			u.versao = row.versao as number;
 			u.admin = (u.idcargo === Cargo.IdAdministrador);
 
 			res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
