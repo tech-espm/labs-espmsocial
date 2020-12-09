@@ -107,7 +107,7 @@ export = class Usuario {
 			login = login.normalize().trim().toLowerCase();
 
 			let rows = await sql.query("select id, nome, idcargo, versao, senha from usuario where login = ?", [login]);
-			let row;
+			let row: any;
 			let ok: boolean;
 
 			if (!rows || !rows.length || !(row = rows[0]) || !(ok = await GeradorHash.validarSenha(senha.normalize(), row.senha))) {
