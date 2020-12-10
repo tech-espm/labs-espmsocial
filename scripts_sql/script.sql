@@ -51,7 +51,7 @@ CREATE TABLE usuario (
   CONSTRAINT usuario_idequipe_FK FOREIGN KEY (idequipe) REFERENCES equipe (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-INSERT INTO usuario (login, nome, idcargo, idequipe, senha, token, criacao, email, telefone, whatsapp, rede_social, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) VALUES ('admin', 'Administrador', 1, 1, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', NULL, NOW(), '', '', '', '', '', '', '', 0, 0, 0, 1);
+INSERT INTO usuario (login, nome, idcargo, idequipe, versao, senha, token, criacao, email, telefone, whatsapp, rede_social, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) VALUES ('admin', 'Administrador', 1, 1, 0, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', NULL, NOW(), '', '', '', '', '', '', '', 0, 0, 0, 1);
 
 -- DROP TABLE IF EXISTS historico_cargo;
 CREATE TABLE historico_cargo (
