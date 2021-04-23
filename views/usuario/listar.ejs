@@ -74,8 +74,7 @@
 			{ title: "Período Saída","class": "col-10", render: encode, data: "periodo_saida" },
 			{ title: "Semestre Entrada","class": "col-10", data: "semestre_entrada" },
 			{ title: "Semestre Saída","class": "col-10", data: "semestre_saida" },
-			{ title: "Semestre Atual","class": "col-10", data: "semestre_atual" },
-			{ title: "Ativo", "class": "col-min", render: function (v, type, row) { return (v ? '<span class="col-h2">Sim</span>' : "Não");  }, data: "ativo" }
+			{ title: "Semestre Atual","class": "col-10", data: "semestre_atual" }
 		],
 		data: <%- lista %>,
 		export: { title: "Usuários" }

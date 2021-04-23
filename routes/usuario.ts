@@ -49,7 +49,7 @@ router.get("/listar", wrap(async (req: express.Request, res: express.Response) =
 		res.render("usuario/listar", {
 			titulo: "Gerenciar Usuários",
 			usuario: u,
-			lista: JSON.stringify(await Usuario.listar())
+			lista: JSON.stringify(await Usuario.listar_ativo())
 		});
 }));
 
@@ -58,7 +58,7 @@ router.get("/listar_inativo", wrap(async (req: express.Request, res: express.Res
 	if (!u || !u.admin)
 		res.redirect(appsettings.root + "/acesso");
 	else
-		res.render("usuario/listar_inativo", {
+		res.render("usuario/listar", {
 			titulo: "Gerenciar Usuários Inativos",
 			usuario: u,
 			lista: JSON.stringify(await Usuario.listar_inativo())

@@ -14,13 +14,6 @@ router.post("/alterarPerfil", wrap(async (req: express.Request, res: express.Res
 	jsonRes(res, 400, await u.alterarPerfil(res, req.body.nome as string, req.body.senhaAtual as string, req.body.novaSenha as string, req.body.imagemPerfil as string));
 }));
 
-router.get("/listar", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res, true);
-	if (!u)
-		return;
-	res.json(await Usuario.listar());
-}));
-
 router.get("/obter", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req, res, true);
 	if (!u)
