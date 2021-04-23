@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS espmsocial;
-USE espmsocial;
+CREATE DATABASE IF NOT EXISTS backofficesocial;
+USE backofficesocial;
 
 -- DROP TABLE IF EXISTS cargo;
 CREATE TABLE cargo (
