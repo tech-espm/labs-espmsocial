@@ -53,4 +53,17 @@ router.get("/listar", wrap(async (req: express.Request, res: express.Response) =
 		});
 }));
 
+router.get("/listar_inativo", wrap(async (req: express.Request, res: express.Response) => {
+	let u = await Usuario.cookie(req);
+	if (!u || !u.admin)
+		res.redirect(appsettings.root + "/acesso");
+	else
+		res.render("usuario/listar_inativo", {
+			titulo: "Gerenciar Usuários Inativos",
+			usuario: u,
+			lista: JSON.stringify(await Usuario.listar_inativo())
+		});
+}));
+
+
 export = router;

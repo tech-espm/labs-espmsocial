@@ -279,6 +279,16 @@ export = class Usuario {
 		return (lista || []);
 	}
 
+	public static async listar_inativo(): Promise<Usuario[]> {
+		let lista: Usuario[] = null;
+
+		await Sql.conectar(async (sql: Sql) => {
+			lista = await sql.query("select u.id, u.login, u.nome, c.nome cargo, e.nome equipe, u.versao, date_format(u.criacao, '%d/%m/%Y') criacao, u.email, u.telefone, u.whatsapp, u.rede_social, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo from usuario u inner join cargo c on (c.id = u.idcargo) inner join equipe e on (e.id = u.idequipe) order by u.login asc ") as Usuario[];
+		});
+
+		return (lista || []);
+	}
+
 	public static async obter(id: number): Promise<Usuario> {
 		let lista: Usuario[] = null;
 
