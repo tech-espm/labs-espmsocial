@@ -1,8 +1,9 @@
 ﻿import Sql = require("../infra/sql");
 
 export = class Cargo {
-	public static readonly IdAdministrador = 1;
-	public static readonly IdGerente = 2;
+	public static readonly IdCoordenadorDocente = 0;
+	public static readonly IdCoordenadorEspecial = 1;
+	public static readonly IdGestor = 2;
 	public static readonly IdMembro = 3;
 
 	public id: number;
