@@ -3,23 +3,23 @@ USE backofficesocial;
 
 -- DROP TABLE IF EXISTS cargo;
 CREATE TABLE cargo (
-  id int NOT NULL AUTO_INCREMENT,
+  id int NOT NULL,
   nome varchar(50) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY cargo_nome_UN (nome)
 );
 
-INSERT INTO cargo (nome) VALUES ('Administrador'), ('Gerente'), ('Membro');
+INSERT INTO cargo (id, nome) VALUES (0, 'Coordenador Docente'), (1, 'Coordenador Especial'), (2, 'Gerente'), (3, 'Membro');
 
 -- DROP TABLE IF EXISTS equipe;
 CREATE TABLE equipe (
-  id int NOT NULL AUTO_INCREMENT,
+  id int NOT NULL,
   nome varchar(50) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY equipe_nome_UN (nome)
 );
 
-INSERT INTO equipe (nome) VALUES ('Administrador'), ('Marketing'), ('RH');
+INSERT INTO equipe (id, nome) VALUES (0, 'Administrador'), (1, 'Marketing'), (2, 'RH');
 
 -- DROP TABLE IF EXISTS usuario;
 CREATE TABLE usuario (
@@ -51,7 +51,7 @@ CREATE TABLE usuario (
   CONSTRAINT usuario_idequipe_FK FOREIGN KEY (idequipe) REFERENCES equipe (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-INSERT INTO usuario (login, nome, idcargo, idequipe, versao, senha, token, criacao, email, telefone, whatsapp, rede_social, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) VALUES ('admin', 'Administrador', 1, 1, 0, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', NULL, NOW(), '', '', '', '', '', '', '', 0, 0, 0, 1);
+INSERT INTO usuario (login, nome, idcargo, idequipe, versao, senha, token, criacao, email, telefone, whatsapp, rede_social, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) VALUES ('admin', 'Administrador', 0, 0, 0, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', NULL, NOW(), '', '', '', '', '', '', '', 0, 0, 0, 1);
 
 -- DROP TABLE IF EXISTS historico_cargo;
 CREATE TABLE historico_cargo (

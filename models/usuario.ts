@@ -73,12 +73,12 @@ export = class Usuario {
 				u.nome = row.nome as string;
 				u.idcargo = row.idcargo as number;
 				u.versao = row.versao as number;
-				u.admin = (u.idcargo === Cargo.IdAdministrador);
+				u.admin = (u.idcargo === Cargo.IdCoordenadorDocente);
 
 				usuario = u;
 			});
 
-			if (admin && usuario && usuario.idcargo !== Cargo.IdAdministrador)
+			if (admin && usuario && usuario.idcargo !== Cargo.IdCoordenadorDocente)
 				usuario = null;
 			if (!usuario && res) {
 				res.statusCode = 403;
@@ -125,7 +125,7 @@ export = class Usuario {
 			u.nome = row.nome as string;
 			u.idcargo = row.idcargo as number;
 			u.versao = row.versao as number;
-			u.admin = (u.idcargo === Cargo.IdAdministrador);
+			u.admin = (u.idcargo === Cargo.IdCoordenadorDocente);
 
 			res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
 		});
