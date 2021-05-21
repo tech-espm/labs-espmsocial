@@ -2,8 +2,8 @@
 
 export = class Cargo {
 	public static readonly IdCoordenadorDocente = 0;
-	public static readonly IdCoordenadorEspecial = 1;
-	public static readonly IdGerente = 2;
+	public static readonly IdGestorEqupe = 1;
+	public static readonly IdCoordenadorProjetoEspecial = 2;
 	public static readonly IdMembro = 3;
 
 	public id: number;

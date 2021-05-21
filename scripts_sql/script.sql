@@ -9,7 +9,7 @@ CREATE TABLE cargo (
   UNIQUE KEY cargo_nome_UN (nome)
 );
 
-INSERT INTO cargo (id, nome) VALUES (0, 'Coordenador Docente'), (1, 'Coordenador Especial'), (2, 'Gerente'), (3, 'Membro');
+INSERT INTO cargo (id, nome) VALUES (0, 'Coordenador Docente'), (1, 'Gestor de Equpe'), (2, 'Coordenador de Projeto Especial'), (3, 'Membro de Equipe');
 
 -- DROP TABLE IF EXISTS equipe;
 CREATE TABLE equipe (
@@ -32,16 +32,16 @@ CREATE TABLE usuario (
   senha varchar(100) NOT NULL,
   token char(32) DEFAULT NULL,
   criacao datetime NOT NULL,
-  email varchar(100) NOT NULL,
-  telefone varchar(20) NOT NULL,
-  whatsapp varchar(20) NOT NULL,
-  rede_social varchar(100) NULL,
-  curso varchar(50) NOT NULL,
-  periodo_entrada varchar(20) NOT NULL, -- 2020/01 (Período do ano que o aluno se associou à Social)
-  periodo_saida varchar(20) NULL, -- 2021/02 (Período do ano que o aluno saiu da Social)
-  semestre_entrada int NOT NULL, -- 1, 2 .... (Semestre que o aluno estava cursando quando se associou à Social)
+  email varchar(100) NULL,
+  telefone varchar(20) NULL,
+  whatsapp varchar(20) NULL,
+  rede_social varchar(100),
+  curso varchar(50) NULL,
+  periodo_entrada varchar(20) NULL, -- 2020/01 (Período do ano que o aluno se associou à Social)
+  periodo_saida varchar(20), -- 2021/02 (Período do ano que o aluno saiu da Social)
+  semestre_entrada int NULL, -- 1, 2 .... (Semestre que o aluno estava cursando quando se associou à Social)
   semestre_saida int NULL, -- 1, 2 .... (Semestre que o aluno estava cursando quando saiu da Social)
-  semestre_atual int NOT NULL, -- 1, 2 .... (Semestre que o aluno está cursando "atualmente")
+  semestre_atual int NULL, -- 1, 2 .... (Semestre que o aluno está cursando "atualmente")
   ativo tinyint(4) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY usuario_login_UN (login),
