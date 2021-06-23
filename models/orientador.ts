@@ -23,7 +23,17 @@ export = class Orientador{
 
 		return lista || [];
     }
-    
+
+	public static async listarDropDown(): Promise<Orientador[]> {
+		let lista: Orientador[] = null;
+
+		await Sql.conectar(async (sql: Sql) => {
+			lista = (await sql.query("select id, nome from orientador order by nome asc")) as Orientador[];
+		});
+
+		return lista || [];
+	}
+   
     public static async obter(id: number): Promise<Orientador> {
 		let lista: Orientador[] = null;
 

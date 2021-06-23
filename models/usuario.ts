@@ -490,6 +490,16 @@ export = class Usuario {
 		return (lista || []);
 	}
 
+	public static async listarDropDown(): Promise<Usuario[]> {
+		let lista: Usuario[] = null;
+
+		await Sql.conectar(async (sql: Sql) => {
+			lista = (await sql.query("select id, nome from usuario order by nome asc")) as Usuario[];
+		});
+
+		return lista || [];
+	}
+
 	public static async obter(id: number): Promise<Usuario> {
 		let lista: Usuario[] = null;
 

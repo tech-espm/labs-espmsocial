@@ -8,72 +8,56 @@
 	</div>
 </div>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="modalExcluir">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Oops...</h4>
-			</div>
-			<div class="modal-body">
-				<p>
-					Tem certeza que deseja excluir a consultoria  <span id="lblNome"></span>? Esta operação <b class="col-h">NÃO</b> pode ser desfeita, e <b class="col-h">TODAS AS RESPOSTAS</b> desta consultoria, de <b class="col-h">TODAS AS PESSOAS</b>, também serão <b class="col-h">EXCLUÍDAS</b>!
-				</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-danger" onclick="excluir()"><i class="fa fa-check"></i>Excluir</button>
-				<button type="button" class="btn btn-outline btn-default" data-dismiss="modal"><i class="fa fa-times"></i>Cancelar</button>
-			</div>
-		</div>
-	</div>
-</div>
-
 <%- contentFor("scripts") %>
 <script type="text/javascript">
 	//<![CDATA[
 	"use strict";
 	var tabela = prepareDataTable("tabela", {
-		order: [[1, "asc"]],
+		order: [[6, "asc"], [7, "asc"], [1, "asc"]],
 		deferRender: true,
 		columns: [
 			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"<%- root %>/consultoria/alterar?id=" + row.id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
-            { title: "Orientador", render: encode, data: "orientador" },
-            { title: "Organização", render: encode, data: "organizacao" },
-            { title: "Ano", "type": "number", data: "ano" }
+            { title: "Organização", "class": "col-min", render: encode, data: "organizacao" },
+            { title: "Orientador", "class": "col-min", render: encode, data: "orientador" },
+            { title: "Gestor", "class": "col-min", render: encode, data: "gestor" },
+            { title: "Consultor", "class": "col-min", render: encode, data: "consultor" },
+            { title: "Categoria", "class": "col-min", render: encode, data: "categoria" },
+            { title: "Ano", "class": "col-min", "type": "number", data: "ano" },
+            { title: "Semestre", "class": "col-min", "type": "number", data: "semestre" },
+			{ title: "Criação", "class": "col-min", "type": "customdateint", data: "criacao" }
 		],
 		data: <%- lista %>,
-		export: { title: "Consultoria" }
+		export: { title: "Consultorias" }
 	});
-	var trClicada;
+
 	$("#tabela").on("click", "tbody button", function () {
 		if (JsonWebApi.active)
 			return;
-		var consultoria = tabela.row(trClicada = this.parentNode.parentNode).data();
+
+		var trClicada = this.parentNode.parentNode,
+			consultoria = tabela.row(trClicada).data();
+
 		if (this.getAttribute("data-excluir")) {
-			$("#lblNome").text(consultoria.nome);
-			$("#modalExcluir").modal({
-				backdrop: "static",
-				keyboard: true
+			Notification.okcancel("Tem certeza que deseja excluir a consultoria da organização " + consultoria.organizacao + "? Esta operação NÃO pode ser desfeita!", null, true, "Excluir").then(function (result) {
+				if (JsonWebApi.active || !trClicada)
+					return;
+
+				if (result.value) {
+					Notification.wait();
+
+					JsonWebApi.get("<%- root %>/api/consultoria/excluir/" + consultoria.id, function (response) {
+						if (response.success) {
+							Notification.success("Consultoria excluída com sucesso! " + emoji.happy);
+							tabela.row(trClicada).remove().draw();
+						} else {
+							Notification.error(response.value + " " + emoji.sad, true);
+						}
+						trClicada = null;
+					});
+				}
 			});
 		}
 	});
-	function excluir() {
-		if (JsonWebApi.active || !trClicada)
-			return;
-		$("#modalExcluir").modal("hide");
-        var consultoria = tabela.row(trClicada).data();
-        
-        Notification.wait();
-        
-		JsonWebApi.get("<%- root %>/api/consultoria/excluir/" + consultoria.id, function (response) {
-			if (response.success) {
-				Notification.success("Consultoria excluída com sucesso! " + emoji.happy);
-				tabela.row(trClicada).remove().draw();
-			} else {
-				Notification.error(response.value + " " + emoji.sad, true);
-			}
-			trClicada = null;
-		});
-	}
+
 	//]]>
 </script>

@@ -83,6 +83,7 @@ CREATE TABLE usuario (
   criacao datetime NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY usuario_login_UN (login),
+  KEY usuario_nome_IX (nome),
   KEY usuario_idcargovigente_FK_idx (idcargovigente),
   KEY usuario_idcurso_FK_idx (idcurso),
   KEY usuario_idgenero_FK_idx (idgenero),
@@ -157,24 +158,17 @@ CREATE TABLE orientador (
 
 CREATE TABLE consultoria (
   id int NOT NULL AUTO_INCREMENT,
-  idorientador int NOT NULL,
   idorganizacao int NOT NULL,
-  ano int NOT NULL,
+  idorientador int NOT NULL,
+  idgestor int NULL,
+  idconsultor int NULL,
+  categoria varchar(100) NULL,
+  ano int NULL,
+  semestre int NULL,
+  criacao datetime NOT NULL,
   PRIMARY KEY (id),
-  KEY consultoria_idorientador_FK_idx (idorientador),
   KEY consultoria_idorganizacao_FK_idx (idorganizacao),
-  KEY consultoria_ano_FK_idx (ano),
-  CONSTRAINT consultoria_idorientador_FK FOREIGN KEY (idorientador) REFERENCES orientador (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT consultoria_idorganizacao_FK FOREIGN KEY (idorganizacao) REFERENCES organizacao (id) ON DELETE RESTRICT ON UPDATE RESTRICT
-);
-
-CREATE TABLE consultoria_usuario (
-  id int NOT NULL AUTO_INCREMENT,
-  idconsultoria int NOT NULL,
-  idusuario int NOT NULL,
-  PRIMARY KEY (id),
-  KEY consultoria_usuario_idconsultoria_FK_idx (idconsultoria),
-  KEY consultoria_usuario_idusuario_FK_idx (idusuario),
-  CONSTRAINT consultoria_usuario_idconsultoria_FK FOREIGN KEY (idconsultoria) REFERENCES consultoria (id) ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT consultoria_usuario_idusuario_FK FOREIGN KEY (idusuario) REFERENCES usuario (id) ON DELETE CASCADE ON UPDATE RESTRICT
+  KEY consultoria_idorientador_FK_idx (idorientador),
+  CONSTRAINT consultoria_idorganizacao_FK FOREIGN KEY (idorganizacao) REFERENCES organizacao (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT consultoria_idorientador_FK FOREIGN KEY (idorientador) REFERENCES orientador (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );

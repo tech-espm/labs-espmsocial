@@ -154,6 +154,16 @@ export = class Organizacao {
 		return lista || [];
 	}
 
+	public static async listarDropDown(): Promise<Organizacao[]> {
+		let lista: Organizacao[] = null;
+
+		await Sql.conectar(async (sql: Sql) => {
+			lista = (await sql.query("select id, nome from organizacao order by nome asc")) as Organizacao[];
+		});
+
+		return lista || [];
+	}
+
 	public static async obter(id: number): Promise<Organizacao> {
 		let organizacao: Organizacao = null;
 
@@ -243,10 +253,21 @@ export = class Organizacao {
 		let res: string = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			await sql.query("delete from organizacao where id = ?", [id]);
-
-			if (!sql.linhasAfetadas)
-				res = "Organização não encontrada";
+			try {
+				await sql.query("delete from organizacao where id = ?", [id]);
+				if (!sql.linhasAfetadas)
+					res = "Organização não encontrada";
+			} catch (e) {
+				if (e.code) {
+					switch (e.code) {
+						case "ER_ROW_IS_REFERENCED":
+						case "ER_ROW_IS_REFERENCED_2":
+							res = "A organização não pode ser excluída porque possui uma ou mais consultorias";
+							return;
+					}
+				}
+				throw e;
+			}
 		});
 
 		return res;

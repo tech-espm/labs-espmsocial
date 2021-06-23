@@ -17,8 +17,9 @@ router.all("/criar", wrap(async (req: express.Request, res: express.Response) =>
 			titulo: "Criar Consultoria", 
 			usuario: u, 
 			item: null,
-			orientadores: await Orientador.listar(), 
-			organizacoes: await Organizacao.listar()           
+			usuarios: await Usuario.listarDropDown(),
+			orientadores: await Orientador.listarDropDown(),
+			organizacoes: await Organizacao.listarDropDown()
 		});
 }));
 
@@ -32,12 +33,13 @@ router.all("/alterar", wrap(async (req: express.Request, res: express.Response) 
 		if (isNaN(id) || !(item = await Consultoria.obter(id)))
 			res.render("home/nao-encontrado", { usuario: u });
 		else
-			res.render("consultoria/alterar", { 
-				titulo: "Editar Consultoria", 
-				usuario: u, 
-				item: item, 
-				orientadores: await Orientador.listar(), 
-				organizacoes: await Organizacao.listar() 
+			res.render("consultoria/alterar", {
+				titulo: "Editar Consultoria",
+				usuario: u,
+				item: item,
+				usuarios: await Usuario.listarDropDown(),
+				orientadores: await Orientador.listarDropDown(),
+				organizacoes: await Organizacao.listarDropDown()
 			});
 	}
 }));
@@ -47,10 +49,10 @@ router.get("/listar", wrap(async (req: express.Request, res: express.Response) =
 	if (!u)
 		res.redirect(appsettings.root + "/login");
 	else
-		res.render("consultoria/listar", { 
-			titulo: "Gerenciar Consultorias", 
-			usuario: u, 
-			lista: JSON.stringify(await Consultoria.listar()) 
+		res.render("consultoria/listar", {
+			titulo: "Gerenciar Consultorias",
+			usuario: u,
+			lista: JSON.stringify(await Consultoria.listar())
 		});
 }));
 

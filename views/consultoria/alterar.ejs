@@ -7,6 +7,16 @@
                 <input type="hidden" id="id" name="id" value="<%=(item ? item.id : 0) %>" />
 
                 <div class="form-group">
+					<label for="idorganizacao">Organização</label>
+					<select id="idorganizacao" name="idorganizacao" class="form-control" size="1">
+						<option value="">Selecione...</option>
+						<% for (let i = 0; i < organizacoes.length; i++) { %>
+						<option value="<%= organizacoes[i].id %>" <%-((item && item.idorganizacao === organizacoes[i].id) ? 'selected="selected"' : '') %>><%= organizacoes[i].nome %></option>
+						<% } %>
+					</select>
+                </div>
+
+                <div class="form-group">
 					<label for="idorientador">Orientador</label>
 					<select id="idorientador" name="idorientador" class="form-control" size="1">
 						<option value="">Selecione...</option>
@@ -17,18 +27,43 @@
                 </div>
 
                 <div class="form-group">
-					<label for="idorganizacao">Organização</label>
-					<select id="idorganizacao" name="idorganizacao" class="form-control" size="1">
+					<label for="idgestor">Gestor</label>
+					<select id="idgestor" name="idgestor" class="form-control" size="1">
 						<option value="">Selecione...</option>
-						<% for (let i = 0; i < organizacoes.length; i++) { %>
-						<option value="<%= organizacoes[i].id %>" <%-((item && item.idorganizacao === organizacoes[i].id) ? 'selected="selected"' : '') %>><%= organizacoes[i].nome %></option>
+						<% for (let i = 0; i < usuarios.length; i++) { %>
+						<option value="<%= usuarios[i].id %>" <%-((item && item.idgestor === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
 						<% } %>
 					</select>
                 </div>
-                
+
+                <div class="form-group">
+					<label for="idconsultor">Consultor</label>
+					<select id="idconsultor" name="idconsultor" class="form-control" size="1">
+						<option value="">Selecione...</option>
+						<% for (let i = 0; i < usuarios.length; i++) { %>
+						<option value="<%= usuarios[i].id %>" <%-((item && item.idconsultor === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
+						<% } %>
+					</select>
+                </div>
+
 				<div class="form-group">
-					<label for="ano">Ano</label>
-					<input id="ano" name="ano" maxlength="11" class="form-control" type="int" spellcheck="false" value="<%=(item ? item.ano : '') %>" />
+					<label for="categoria">Categoria</label>
+					<input id="categoria" name="categoria" class="form-control" type="text" maxlength="100" value="<%=(item ? item.categoria : '') %>" />
+				</div>
+
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="ano">Ano</label>
+							<input id="ano" name="ano" class="form-control" type="number" min="1" value="<%=(item ? item.ano : '') %>" />
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="semestre">Semestre</label>
+							<input id="semestre" name="semestre" class="form-control" type="number" min="1" value="<%=(item ? item.semestre : '') %>" />
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="panel-footer">
@@ -45,16 +80,11 @@
 
 	$("#form").validate({
 		rules: {
-            idorientador: {
-				required: true
-            },
             idorganizacao: {
 				required: true
             },
-            nome: {
-				required: true,
-				minlength: 0,
-				maxlength: 11
+            idorientador: {
+				required: true
             }
 		},
 
