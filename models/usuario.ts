@@ -63,12 +63,13 @@ export = class Usuario {
 
 	// Utilizados apenas através do cookie
 	public admin: boolean;
+	public gestor: boolean;
 
 	// Não estamos utilizando Usuario.cookie como middleware, porque existem muitas requests
 	// que não precisam validar o usuário logado, e agora, é assíncrono...
 	// http://expressjs.com/pt-br/guide/writing-middleware.html
 	//public static cookie(req: express.Request, res: express.Response, next: Function): void {
-	public static async cookie(req: express.Request, res: express.Response = null, admin: boolean = false): Promise<Usuario> {
+	public static async cookie(req: express.Request, res: express.Response = null, admin: boolean = false, gestor: boolean = false): Promise<Usuario> {
 		let cookieStr = req.cookies[appsettings.cookie] as string;
 		if (!cookieStr || cookieStr.length !== 48) {
 			if (res) {
@@ -99,12 +100,17 @@ export = class Usuario {
 				u.idcargovigente = row.idcargovigente as number;
 				u.versao = row.versao as number;
 				u.admin = (u.idcargovigente === Cargo.IdCoordenadorDocente);
+				u.gestor = (u.idcargovigente === Cargo.IdGestorEquipe);
 
 				usuario = u;
 			});
 
-			if (admin && usuario && usuario.idcargovigente !== Cargo.IdCoordenadorDocente)
+			if (admin && usuario && !usuario.admin)
 				usuario = null;
+
+			if (gestor && usuario && !usuario.admin && !usuario.gestor)
+				usuario = null;
+
 			if (!usuario && res) {
 				res.statusCode = 403;
 				res.json("Não permitido");
@@ -151,6 +157,7 @@ export = class Usuario {
 			u.idcargovigente = row.idcargovigente as number;
 			u.versao = row.versao as number;
 			u.admin = (u.idcargovigente === Cargo.IdCoordenadorDocente);
+			u.gestor = (u.idcargovigente === Cargo.IdGestorEquipe);
 
 			res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
 		});
@@ -230,7 +237,7 @@ export = class Usuario {
 
 	private static validar(u: Usuario): string {
 		u.nome = (u.nome || "").normalize().trim();
-		if (u.nome.length < 3 || u.nome.length > 100)
+		if (u.nome.length < 2 || u.nome.length > 100)
 			return "Nome inválido";
 
 		u.idcargovigente = parseInt(u.idcargovigente as any);
@@ -460,7 +467,7 @@ export = class Usuario {
 			date_format(u.cargodata1, '%d/%m/%Y') cargodata1, date_format(u.cargodata2, '%d/%m/%Y') cargodata2, date_format(u.cargodata3, '%d/%m/%Y') cargodata3, date_format(u.cargodata4, '%d/%m/%Y') cargodata4, date_format(u.cargodata5, '%d/%m/%Y') cargodata5,
 			u.versao, u.email, u.telefone, u.whatsapp, u.instagram, u.facebook, u.linkedin, u.observacoes, u.periodo_entrada, u.periodo_saida,
 			date_format(u.data_entrada, '%d/%m/%Y') data_entrada, date_format(u.data_saida, '%d/%m/%Y') data_saida,
-			u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.semestre_permanencia, u.colegiado, u.ativo
+			u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.semestre_permanencia, u.colegiado, u.ativo, date_format(u.criacao, '%d/%m/%Y') criacao
 			from usuario u
 			inner join cargo cv on (cv.id = u.idcargovigente)
 			inner join curso c on (c.id = u.idcurso)
@@ -548,7 +555,7 @@ export = class Usuario {
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
-				await sql.query("insert into usuario (login, nome, idcargovigente, idequipevigente, idcurso, idgenero, idcargo1, idcargo2, idcargo3, idcargo4, idcargo5, idequipe1, idequipe2, idequipe3, idequipe4, idequipe5, cargodata1, cargodata2, cargodata3, cargodata4, cargodata5, versao, senha, email, telefone, whatsapp, instagram, facebook, linkedin, observacoes, periodo_entrada, periodo_saida, data_entrada, data_saida, semestre_entrada, semestre_saida, semestre_atual, semestre_permanencia, colegiado, ativo, criacao) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())", [u.login, u.nome, u.idcargovigente, u.idequipevigente, u.idcurso, u.idgenero, u.idcargo1, u.idcargo2, u.idcargo3, u.idcargo4, u.idcargo5, u.idequipe1, u.idequipe2, u.idequipe3, u.idequipe4, u.idequipe5, u.cargodata1, u.cargodata2, u.cargodata3, u.cargodata4, u.cargodata5, appsettings.usuarioHashSenhaPadrao, u.email, u.telefone, u.whatsapp, u.instagram, u.facebook, u.linkedin, u.observacoes, u.periodo_entrada, u.periodo_saida, u.data_entrada, u.data_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.semestre_permanencia, u.colegiado, u.ativo]);
+				await sql.query("insert into usuario (login, nome, idcargovigente, idequipevigente, idcurso, idgenero, idcargo1, idcargo2, idcargo3, idcargo4, idcargo5, idequipe1, idequipe2, idequipe3, idequipe4, idequipe5, cargodata1, cargodata2, cargodata3, cargodata4, cargodata5, versao, senha, email, telefone, whatsapp, instagram, facebook, linkedin, observacoes, periodo_entrada, periodo_saida, data_entrada, data_saida, semestre_entrada, semestre_saida, semestre_atual, semestre_permanencia, colegiado, ativo, criacao) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [u.login, u.nome, u.idcargovigente, u.idequipevigente, u.idcurso, u.idgenero, u.idcargo1, u.idcargo2, u.idcargo3, u.idcargo4, u.idcargo5, u.idequipe1, u.idequipe2, u.idequipe3, u.idequipe4, u.idequipe5, u.cargodata1, u.cargodata2, u.cargodata3, u.cargodata4, u.cargodata5, appsettings.usuarioHashSenhaPadrao, u.email, u.telefone, u.whatsapp, u.instagram, u.facebook, u.linkedin, u.observacoes, u.periodo_entrada, u.periodo_saida, u.data_entrada, u.data_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.semestre_permanencia, u.colegiado, u.ativo, DataUtil.hojeISOComHorario()]);
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {

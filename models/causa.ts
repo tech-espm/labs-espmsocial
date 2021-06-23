@@ -83,10 +83,21 @@ export = class Causa{
 		let res: string = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			await sql.query("delete from causa where id = ?", [id]);
-			
-			if (!sql.linhasAfetadas)
-				res = "Causa não encontrada";
+			try {
+				await sql.query("delete from causa where id = ?", [id]);
+				if (!sql.linhasAfetadas)
+					res = "Causa não encontrada";
+			} catch (e) {
+				if (e.code) {
+					switch (e.code) {
+						case "ER_ROW_IS_REFERENCED":
+						case "ER_ROW_IS_REFERENCED_2":
+							res = "A causa não pode ser excluída porque pertence a uma ou mais organizações";
+							return;
+					}
+				}
+				throw e;
+			}
 		});
 
 		return res;

@@ -4,7 +4,7 @@ export = class Consultoria{
 
     public id: number;
     public idorientador: number;
-    public idong: number;
+    public idorganizacao: number;
     public ano : number;
 
 	private static validar(c: Consultoria): string {
@@ -12,9 +12,9 @@ export = class Consultoria{
 		if (isNaN(c.idorientador))
 			return "Orientador inválido";
 
-		c.idong = parseInt(c.idong as any);
-		if (isNaN(c.idong))
-			return "ONG inválida";
+		c.idorganizacao = parseInt(c.idorganizacao as any);
+		if (isNaN(c.idorganizacao))
+			return "Organização inválida";
 
 		c.ano = parseInt(c.ano as any);
 		if (isNaN(c.ano) || c.ano < 0)
@@ -27,7 +27,7 @@ export = class Consultoria{
 		let lista: Consultoria[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = (await sql.query("select c.id, c.ano, e.nome orientador, o.nome ong from consultoria c inner join orientador e on (c.idorientador = e.id) inner join ong o on (c.idong = o.id) order by c.ano asc")) as Consultoria[];
+			lista = (await sql.query("select c.id, c.ano, e.nome orientador, o.nome organizacao from consultoria c inner join orientador e on (c.idorientador = e.id) inner join organizacao o on (c.idorganizacao = o.id) order by c.ano asc")) as Consultoria[];
 		});
 
 		return lista || [];
@@ -37,7 +37,7 @@ export = class Consultoria{
 		let lista: Consultoria[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select id, idorientador, idong, ano from consultoria where id = ?", [id]) as Consultoria[];
+			lista = await sql.query("select id, idorientador, idorganizacao, ano from consultoria where id = ?", [id]) as Consultoria[];
 		});
 
 		return ((lista && lista[0]) || null);
@@ -52,7 +52,7 @@ export = class Consultoria{
 		}
 
 		await Sql.conectar(async (sql: Sql) => {
-			await sql.query("INSERT INTO consultoria (idorientador, idong, ano) VALUES (?, ?, ?)", [c.idorientador, c.idong, c.ano]);
+			await sql.query("INSERT INTO consultoria (idorientador, idorganizacao, ano) VALUES (?, ?, ?)", [c.idorientador, c.idorganizacao, c.ano]);
 		});
 
 		return erro;
@@ -66,7 +66,7 @@ export = class Consultoria{
 		}
 
 		await Sql.conectar(async (sql: Sql) => {
-			await sql.query("update consultoria set idorientador = ?, idong = ?, ano = ? where id = ?", [c.idorientador, c.idong, c.ano, c.id]);
+			await sql.query("update consultoria set idorientador = ?, idorganizacao = ?, ano = ? where id = ?", [c.idorientador, c.idorganizacao, c.ano, c.id]);
 			
 			if (!sql.linhasAfetadas)
 				erro = "Consultoria não encontrada";

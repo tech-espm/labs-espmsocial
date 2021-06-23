@@ -99,16 +99,18 @@ app.use((req: express.Request, res: express.Response, next: express.NextFunction
 // Cadastros simples
 app.use("/", require("./routes/home"));
 app.use("/usuario", require("./routes/usuario"));
+app.use("/curso", require("./routes/curso"));
 app.use("/equipe", require("./routes/equipe"));
 app.use("/causa", require("./routes/causa"));
-app.use("/ong", require("./routes/ong"));
+app.use("/organizacao", require("./routes/organizacao"));
 app.use("/orientador", require("./routes/orientador"));
 app.use("/consultoria", require("./routes/consultoria"));
 app.use("/representante", require("./routes/representante"));
 // API
 app.use("/api/cargo", require("./routes/api/cargo"));
-app.use("/api/ong", require("./routes/api/ong"));
+app.use("/api/organizacao", require("./routes/api/organizacao"));
 app.use("/api/causa", require("./routes/api/causa"));
+app.use("/api/curso", require("./routes/api/curso"));
 app.use("/api/equipe", require("./routes/api/equipe"));
 app.use("/api/representante", require("./routes/api/representante"));
 app.use("/api/usuario", require("./routes/api/usuario"));

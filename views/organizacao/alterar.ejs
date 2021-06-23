@@ -1,0 +1,160 @@
+
+<div class="row">
+	<div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+		<form id="form" class="panel panel-info" action="#">
+			<div class="panel-heading">Informações da Organização</div>
+			<div class="panel-body no-bottom">
+				<input type="hidden" id="id" name="id" value="<%=(item ? item.id : 0) %>" />
+				<div class="form-group">
+					<label for="nome">Nome</label>
+					<input id="nome" name="nome" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.nome : '') %>" />
+				</div>
+
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="ativo">Ativa</label>
+							<select id="ativo" name="ativo" size="1" class="form-control">
+								<option value="">Selecione...</option>
+								<option value="1" <%=((item && item.ativo) ? 'selected="selected"' : '') %>>Sim</option>
+								<option value="0" <%=((item && !item.ativo) ? 'selected="selected"' : '') %>>Não</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="sigla">Sigla</label>
+							<input id="sigla" name="sigla" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.sigla : '') %>" />
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="idequipe_parceira">Equipe Parceira</label>
+					<select id="idequipe_parceira" name="idequipe_parceira" class="form-control" size="1">
+						<option value="">Selecione...</option>
+						<% for (let i = 0; i < equipes.length; i++) { %>
+						<option value="<%= equipes[i].id %>" <%-((item && item.idequipe_parceira === equipes[i].id) ? 'selected="selected"' : '') %>><%= equipes[i].nome %></option>
+						<% } %>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="razao_social">Razão Social</label>
+					<input id="razao_social" name="razao_social" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.razao_social : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="semestre_atendimento">Semestre de Atendimento</label>
+					<input id="semestre_atendimento" name="semestre_atendimento" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.semestre_atendimento : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="descricao">Descrição</label>
+					<input id="descricao" name="descricao" maxlength="100" class="form-control" type="text" value="<%=(item ? item.descricao : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="observacoes">Observações</label>
+					<input id="observacoes" name="observacoes" maxlength="100" class="form-control" type="text" value="<%=(item ? item.observacoes : '') %>" />
+				</div>
+
+				<hr style="margin: 45px 0;" />
+
+				<h2 class="text-center" style="margin: 45px 0;">Contato</h2>
+
+				<div class="form-group">
+					<label for="endereco">Endereço</label>
+					<input id="endereco" name="endereco" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.endereco : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="email">E-mail</label>
+					<input id="email" name="email" maxlength="100" class="form-control" type="email" value="<%=(item ? item.email : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="telefone">Telefone</label>
+					<input id="telefone" name="telefone" maxlength="20" class="form-control" type="text" value="<%=(item ? item.telefone : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="site">Site</label>
+					<input id="site" name="site" maxlength="100" class="form-control" type="url" value="<%=(item ? item.site : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="facebook">Facebook</label>
+					<input id="facebook" name="facebook" maxlength="100" class="form-control" type="url" value="<%=(item ? item.facebook : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="instagram">Instagram</label>
+					<input id="instagram" name="instagram" maxlength="100" class="form-control" type="url" value="<%=(item ? item.instagram : '') %>" />
+				</div>
+			</div>
+
+			<div class="panel-heading">Causas</div>
+			<div class="panel-body">
+				<% for (let i = 0; i < causas.length; i++) { %>
+					<div class="checkbox">
+						<label><input type="checkbox" name="causas" value="<%=causas[i].id %>" <%=((item && item.causas && item.causas.indexOf(causas[i].id) >= 0) ? 'checked="checked"' : '') %> /> <%=causas[i].nome %></label>
+					</div>
+				<% } %>
+			</div>
+			<div class="panel-footer">
+				<input value="<%=(item ? 'Salvar Alterações' : 'Criar Organização') %>" class="btn btn-primary btn-outline btn-lg btn-block" type="submit" />
+			</div>	
+		</form>
+	</div>
+</div>
+
+<%- contentFor("scripts") %>
+<script type="text/javascript">
+	//<![CDATA[
+	"use strict";
+	
+	maskMobilePhone("#telefone");
+
+	$("#form").validate({
+		rules: {
+			nome: {
+				required: true,
+				minlength: 2
+			},
+			ativo: {
+				required: true
+			}
+		},
+
+		submitHandler: function (form) {
+			if (JsonWebApi.active)
+				return;
+
+			Notification.wait();
+
+			//<% if (item) { %>
+
+			JsonWebApi.postFormData("<%- root %>/api/organizacao/alterar", form, function (response) {
+				if (response.success)
+					Notification.success("Organização alterada com sucesso! " + emoji.happy);
+				else
+					Notification.error(response.value + " " + emoji.sad, true);
+			});
+
+			//<% } else { %>
+
+			JsonWebApi.postFormData("<%- root %>/api/organizacao/criar", form, function (response) {
+				if (response.success) {
+					resetForm("#form");
+					Notification.success("Organização criada com sucesso! " + emoji.happy);
+				} else {
+					Notification.error(response.value + " " + emoji.sad, true);
+				}
+			});
+
+			//<% } %>
+		}
+	});
+	//]]>
+</script>

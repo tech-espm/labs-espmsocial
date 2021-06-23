@@ -66,7 +66,9 @@
 			{ title: "Equipe 4", "class": "col-min", render: encode, data: "equipe4" },
 			{ title: "Data do Cargo 5", "class": "col-min", "type": "customdateint", data: "cargodata5" },
 			{ title: "Cargo 5", "class": "col-min", render: encode, data: "cargo5" },
-			{ title: "Equipe 5", "class": "col-min", render: encode, data: "equipe5" }
+			{ title: "Equipe 5", "class": "col-min", render: encode, data: "equipe5" },
+
+			{ title: "Criação", "class": "col-min", "type": "customdateint", data: "criacao" }
 		],
 		data: <%- lista %>,
 		export: { title: "<%- (colegiado ? 'Colegiado' : 'Usuários') %>" }
@@ -94,7 +96,7 @@
 							Notification.success("Usuário excluído com sucesso! " + emoji.happy);
 							tabela.row(trClicada).remove().draw();
 						} else {
-							Notification.error(response.value, true);
+							Notification.error(response.value + " " + emoji.sad, true);
 						}
 						trClicada = null;
 					}, "id", usuario.id);
@@ -112,7 +114,7 @@
 						if (response.success)
 							Notification.success("Senha redefinida com sucesso! " + emoji.happy);
 						else
-							Notification.error(response.value, true);
+							Notification.error(response.value + " " + emoji.sad, true);
 						trClicada = null;
 					}, "id", usuario.id);
 				}

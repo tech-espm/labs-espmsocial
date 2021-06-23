@@ -66,7 +66,7 @@
 				Notification.success("Orientador excluído com sucesso! " + emoji.happy);
 				tabela.row(trClicada).remove().draw();
 			} else {
-				Notification.error(response.value, true);
+				Notification.error(response.value + " " + emoji.sad, true);
 			}
 			trClicada = null;
 		});

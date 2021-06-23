@@ -8,26 +8,6 @@
 	</div>
 </div>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="modalExcluir">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Oops...</h4>
-			</div>
-			<div class="modal-body">
-				<p>
-					Tem certeza que deseja excluir a causa  <span id="lblNome"></span>? Esta operação <b class="col-h">NÃO</b> pode ser desfeita, e <b class="col-h">TODAS AS RESPOSTAS</b> desta causa, de <b class="col-h">TODAS AS PESSOAS</b>, também serão <b class="col-h">EXCLUÍDAS</b>!
-				</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-danger" onclick="excluir()"><i class="fa fa-check"></i>Excluir</button>
-				<button type="button" class="btn btn-outline btn-default" data-dismiss="modal"><i class="fa fa-times"></i>Cancelar</button>
-			</div>
-		</div>
-	</div>
-</div>
-
 <%- contentFor("scripts") %>
 <script type="text/javascript">
 	//<![CDATA[
@@ -42,34 +22,35 @@
 		data: <%- lista %>,
 		export: { title: "Causa" }
 	});
-	var trClicada;
+
 	$("#tabela").on("click", "tbody button", function () {
 		if (JsonWebApi.active)
 			return;
-		var causa = tabela.row(trClicada = this.parentNode.parentNode).data();
+
+		var trClicada = this.parentNode.parentNode,
+			causa = tabela.row(trClicada).data();
+
 		if (this.getAttribute("data-excluir")) {
-			$("#lblNome").text(causa.nome);
-			$("#modalExcluir").modal({
-				backdrop: "static",
-				keyboard: true
+			Notification.okcancel("Tem certeza que deseja excluir a equipe " + causa.nome + "? Esta operação NÃO pode ser desfeita!", null, true, "Excluir").then(function (result) {
+				if (JsonWebApi.active || !trClicada)
+					return;
+
+				if (result.value) {
+					Notification.wait();
+
+					JsonWebApi.get("<%- root %>/api/causa/excluir/" + causa.id, function (response) {
+						if (response.success) {
+							Notification.success("Causa excluída com sucesso! " + emoji.happy);
+							tabela.row(trClicada).remove().draw();
+						} else {
+							Notification.error(response.value + " " + emoji.sad, true);
+						}
+						trClicada = null;
+					});
+				}
 			});
 		}
 	});
-	function excluir() {
-		if (JsonWebApi.active || !trClicada)
-			return;
-		$("#modalExcluir").modal("hide");
-		var causa = tabela.row(trClicada).data();
-		Notification.wait();
-		JsonWebApi.get("<%- root %>/api/causa/excluir/" + causa.id, function (response) {
-			if (response.success) {
-				Notification.success("Causa excluída com sucesso! " + emoji.happy);
-				tabela.row(trClicada).remove().draw();
-			} else {
-				Notification.error(response.value, true);
-			}
-			trClicada = null;
-		});
-	}
+
 	//]]>
 </script>

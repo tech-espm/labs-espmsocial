@@ -23,7 +23,7 @@ router.get("/obter", wrap(async (req: express.Request, res: express.Response) =>
 }));
 
 router.post("/criar", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res, true);
+	let u = await Usuario.cookie(req, res);
 	if (!u)
 		return;
 
@@ -39,7 +39,7 @@ router.post("/criar", wrap(async (req: express.Request, res: express.Response) =
 }));
 
 router.post("/alterar", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res, true);
+	let u = await Usuario.cookie(req, res);
 	if (!u)
 		return;
 
@@ -55,7 +55,7 @@ router.post("/alterar", wrap(async (req: express.Request, res: express.Response)
 }));
 
 router.get("/excluir", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res, true);
+	let u = await Usuario.cookie(req, res);
 	if (!u)
 		return;
 

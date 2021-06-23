@@ -1,7 +1,6 @@
-CREATE DATABASE IF NOT EXISTS backofficesocial;
+CREATE DATABASE IF NOT EXISTS backofficesocial DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_0900_ai_ci;
 USE backofficesocial;
 
--- DROP TABLE IF EXISTS cargo;
 CREATE TABLE cargo (
   id int NOT NULL,
   nome varchar(50) NOT NULL,
@@ -12,13 +11,13 @@ CREATE TABLE cargo (
 INSERT INTO cargo (id, nome) VALUES (0, 'Coordenador Docente'), (1, 'Gestor de Equipe'), (2, 'Coordenador de Projeto Especial'), (3, 'Membro de Equipe'), (4, 'Indefinido');
 
 CREATE TABLE equipe (
-  id int NOT NULL,
-  nome varchar(50) NOT NULL,
+  id int NOT NULL AUTO_INCREMENT,
+  nome varchar(100) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY equipe_nome_UN (nome)
 );
 
-INSERT INTO equipe (id, nome) VALUES (0, 'Administrador'), (1, 'Marketing'), (2, 'RH');
+INSERT INTO equipe (nome) VALUES ('Administrador'), ('Marketing'), ('RH');
 
 CREATE TABLE genero (
   id int NOT NULL,
@@ -92,9 +91,8 @@ CREATE TABLE usuario (
   CONSTRAINT usuario_idgenero_FK FOREIGN KEY (idgenero) REFERENCES genero (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-INSERT INTO usuario (login, nome, idcargovigente, idequipevigente, idcurso, idgenero, versao, senha, colegiado, ativo, criacao) VALUES ('admin', 'Administrador', 0, 0, 1, 0, 0, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', 0, 1, NOW());
+INSERT INTO usuario (login, nome, idcargovigente, idequipevigente, idcurso, idgenero, versao, senha, colegiado, ativo, criacao) VALUES ('admin', 'Administrador', 0, 1, 1, 0, 0, 'peTcC99vkvvLqGQL7mdhGuJZIvL2iMEqvCNvZw3475PJ:JVyo1Pg2HyDyw9aSOd3gNPT30KdEyiUYCjs7RUzSoYGN', 0, 1, NOW());
 
--- DROP TABLE IF EXISTS causa;
 CREATE TABLE causa (
   id int NOT NULL AUTO_INCREMENT,
   nome varchar(100) NOT NULL,
@@ -104,47 +102,52 @@ CREATE TABLE causa (
 
 INSERT INTO causa (nome) VALUES ('LGBT'), ('Racismo'), ('Crianças Abandonadas');
 
--- DROP TABLE IF EXISTS ong;
-CREATE TABLE ong (
+CREATE TABLE organizacao (
   id int NOT NULL AUTO_INCREMENT,
   nome varchar(100) NOT NULL,
-  telefone varchar(20) NOT NULL,
-  endereco varchar(100) NOT NULL,
-  email varchar(100) NOT NULL,
-  criacao datetime NOT NULL,
+  idequipe_parceira int NULL,
+  razao_social varchar(100) NULL,
+  sigla varchar(100) NULL,
+  semestre_atendimento varchar(100) NULL,
+  descricao varchar(100) NULL,
+  observacoes varchar(100) NULL,
+  endereco varchar(100) NULL,
+  email varchar(100) NULL,
+  telefone varchar(20) NULL,
+  site varchar(100) NULL,
+  facebook varchar(100) NULL,
+  instagram varchar(100) NULL,
   ativo tinyint NOT NULL,
+  criacao datetime NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY ong_nome_UN (nome),
-  KEY ong_ativo_FK_idx (ativo)
+  UNIQUE KEY organizacao_nome_UN (nome),
+  KEY organizacao_ativo_FK_idx (ativo)
 );
 
--- DROP TABLE IF EXISTS ong_causa;
-CREATE TABLE ong_causa (
+CREATE TABLE organizacao_causa (
   id int NOT NULL AUTO_INCREMENT,
-  idong int NOT NULL,
+  idorganizacao int NOT NULL,
   idcausa int NOT NULL,
   PRIMARY KEY (id),
-  KEY ong_causa_idong_FK_idx (idong),
-  KEY ong_causa_idcausa_FK_idx (idcausa),
-  CONSTRAINT ong_causa_idong_FK FOREIGN KEY (idong) REFERENCES ong (id) ON DELETE CASCADE ON UPDATE RESTRICT,
-  CONSTRAINT ong_causa_idcausa_FK FOREIGN KEY (idcausa) REFERENCES causa (id) ON DELETE CASCADE ON UPDATE RESTRICT
+  KEY organizacao_causa_idorganizacao_FK_idx (idorganizacao),
+  KEY organizacao_causa_idcausa_FK_idx (idcausa),
+  CONSTRAINT organizacao_causa_idorganizacao_FK FOREIGN KEY (idorganizacao) REFERENCES organizacao (id) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT organizacao_causa_idcausa_FK FOREIGN KEY (idcausa) REFERENCES causa (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
--- DROP TABLE IF EXISTS representante;
 CREATE TABLE representante (
   id int NOT NULL AUTO_INCREMENT,
   nome varchar(100) NOT NULL,
-  idong int NOT NULL,
+  idorganizacao int NOT NULL,
   email varchar(100) NOT NULL,
   telefone varchar(20) NOT NULL,
   whatsapp varchar(20) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY representante_nome_UN (nome),
-  KEY representante_idong_FK_idx (idong),
-  CONSTRAINT representante_idong_FK FOREIGN KEY (idong) REFERENCES ong (id) ON DELETE CASCADE ON UPDATE RESTRICT
+  KEY representante_idorganizacao_FK_idx (idorganizacao),
+  CONSTRAINT representante_idorganizacao_FK FOREIGN KEY (idorganizacao) REFERENCES organizacao (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
--- DROP TABLE IF EXISTS orientador;
 CREATE TABLE orientador (
   id int NOT NULL AUTO_INCREMENT,
   nome varchar(100) NOT NULL,
@@ -152,21 +155,19 @@ CREATE TABLE orientador (
   UNIQUE KEY orientador_nome_UN (nome)
 );
 
--- DROP TABLE IF EXISTS consultoria;
 CREATE TABLE consultoria (
   id int NOT NULL AUTO_INCREMENT,
   idorientador int NOT NULL,
-  idong int NOT NULL,
+  idorganizacao int NOT NULL,
   ano int NOT NULL,
   PRIMARY KEY (id),
   KEY consultoria_idorientador_FK_idx (idorientador),
-  KEY consultoria_idong_FK_idx (idong),
+  KEY consultoria_idorganizacao_FK_idx (idorganizacao),
   KEY consultoria_ano_FK_idx (ano),
   CONSTRAINT consultoria_idorientador_FK FOREIGN KEY (idorientador) REFERENCES orientador (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT consultoria_idong_FK FOREIGN KEY (idong) REFERENCES ong (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT consultoria_idorganizacao_FK FOREIGN KEY (idorganizacao) REFERENCES organizacao (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
--- DROP TABLE IF EXISTS consultoria_usuario;
 CREATE TABLE consultoria_usuario (
   id int NOT NULL AUTO_INCREMENT,
   idconsultoria int NOT NULL,

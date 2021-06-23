@@ -2,7 +2,7 @@ import express = require("express");
 import wrap = require("../infra/wrap");
 import Consultoria = require("../models/consultoria");
 import Usuario = require("../models/usuario");
-import Ong = require("../models/ong");
+import Organizacao = require("../models/organizacao");
 import Orientador = require("../models/orientador");
 import appsettings = require("../appsettings");
 
@@ -10,22 +10,22 @@ const router = express.Router();
 
 router.all("/criar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
-	if (!u || !u.admin)
-		res.redirect(appsettings.root + "/acesso");
+	if (!u)
+		res.redirect(appsettings.root + "/login");
 	else
 		res.render("consultoria/alterar", { 
-            titulo: "Criar Consultoria", 
-            usuario: u, 
-            item: null,
-            orientadores: await Orientador.listar(), 
-            ongs: await Ong.listar()           
-        });
+			titulo: "Criar Consultoria", 
+			usuario: u, 
+			item: null,
+			orientadores: await Orientador.listar(), 
+			organizacoes: await Organizacao.listar()           
+		});
 }));
 
 router.all("/alterar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
-	if (!u || !u.admin) {
-		res.redirect(appsettings.root + "/acesso");
+	if (!u) {
+		res.redirect(appsettings.root + "/login");
 	} else {
 		let id = parseInt(req.query["id"] as string);
 		let item: Consultoria = null;
@@ -33,25 +33,25 @@ router.all("/alterar", wrap(async (req: express.Request, res: express.Response) 
 			res.render("home/nao-encontrado", { usuario: u });
 		else
 			res.render("consultoria/alterar", { 
-                titulo: "Editar Consultoria", 
-                usuario: u, 
-                item: item, 
-                orientadores: await Orientador.listar(), 
-                ongs: await Ong.listar() 
-            });
+				titulo: "Editar Consultoria", 
+				usuario: u, 
+				item: item, 
+				orientadores: await Orientador.listar(), 
+				organizacoes: await Organizacao.listar() 
+			});
 	}
 }));
 
 router.get("/listar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
-	if (!u || !u.admin)
-		res.redirect(appsettings.root + "/acesso");
+	if (!u)
+		res.redirect(appsettings.root + "/login");
 	else
 		res.render("consultoria/listar", { 
-            titulo: "Gerenciar Consultorias", 
-            usuario: u, 
-            lista: JSON.stringify(await Consultoria.listar()) 
-        });
+			titulo: "Gerenciar Consultorias", 
+			usuario: u, 
+			lista: JSON.stringify(await Consultoria.listar()) 
+		});
 }));
 
 export = router;

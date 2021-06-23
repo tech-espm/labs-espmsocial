@@ -359,7 +359,7 @@
 			},
 			nome: {
 				required: true,
-				minlength: 3
+				minlength: 2
 			},
 			idcargovigente: {
 				required: true
@@ -384,7 +384,7 @@
 				if (response.success)
 					Notification.success("Usuário alterado com sucesso! " + emoji.happy);
 				else
-					Notification.error(response.value, true);
+					Notification.error(response.value + " " + emoji.sad, true);
 			});
 
 			//<% } else { %>
@@ -394,7 +394,7 @@
 					resetForm("#form");
 					Notification.success("Usuário criado com sucesso (senha padrão: 1234)! " + emoji.happy);
 				} else {
-					Notification.error(response.value, true);
+					Notification.error(response.value + " " + emoji.sad, true);
 				}
 			});
 

@@ -4,7 +4,7 @@ export = class Representante {
 
 	public id: number;
     public nome: string;
-    public idong: number;
+    public idorganizacao: number;
     public email: string;
     public telefone: string;
     public whatsapp: string;
@@ -14,9 +14,9 @@ export = class Representante {
 		if (r.nome.length < 3 || r.nome.length > 100)
             return "Nome inválido";
             
-        r.idong = parseInt(r.idong as any);
-		if (isNaN(r.idong))
-			return "Ong inválida";
+        r.idorganizacao = parseInt(r.idorganizacao as any);
+		if (isNaN(r.idorganizacao))
+			return "Organização inválida";
 
 		r.email = (r.email || "").normalize().trim();
 		if (r.email.length < 3 || r.email.length > 100)
@@ -37,7 +37,7 @@ export = class Representante {
 		let lista: Representante[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = (await sql.query("select r.id, r.nome, r.idong, o.nome ong, r.email, r.telefone, r.whatsapp from representante r inner join ong o on o.id = r.idong order by nome asc")) as Representante[];
+			lista = (await sql.query("select r.id, r.nome, r.idorganizacao, o.nome organizacao, r.email, r.telefone, r.whatsapp from representante r inner join organizacao o on o.id = r.idorganizacao order by nome asc")) as Representante[];
 		});
 
 		return lista || [];
@@ -47,7 +47,7 @@ export = class Representante {
 		let lista: Representante[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = (await sql.query("select id, nome , idong, email, telefone, whatsapp from representante where id = ?", [id])) as Representante[];
+			lista = (await sql.query("select id, nome , idorganizacao, email, telefone, whatsapp from representante where id = ?", [id])) as Representante[];
 		});
 
 		return (lista && lista[0]) || null;
@@ -61,7 +61,7 @@ export = class Representante {
 		await Sql.conectar(async (sql: Sql) => { 
 			try {
 
-				await sql.query("insert into representante (nome, idong, email, telefone, whatsapp) values (?,?,?,?,?)", [r.nome, r.idong, r.email, r.telefone,r.whatsapp]);
+				await sql.query("insert into representante (nome, idorganizacao, email, telefone, whatsapp) values (?,?,?,?,?)", [r.nome, r.idorganizacao, r.email, r.telefone,r.whatsapp]);
 			
 	
 			} catch (e) {
@@ -83,7 +83,7 @@ export = class Representante {
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
-				await sql.query("update representante set nome = ?, idong = ?, email = ?, telefone = ?, whatsapp = ? where id = ?", [r.nome,r.idong, r.email, r.telefone, r.whatsapp, r.id]);
+				await sql.query("update representante set nome = ?, idorganizacao = ?, email = ?, telefone = ?, whatsapp = ? where id = ?", [r.nome,r.idorganizacao, r.email, r.telefone, r.whatsapp, r.id]);
 				
 				if (!sql.linhasAfetadas)
 					res = "Representante não encontrado";

@@ -8,7 +8,7 @@ import Usuario = require("../../models/usuario");
 const router = express.Router();
 
 router.get("/listar", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res);
+	let u = await Usuario.cookie(req, res, false, true);
 	if (!u)
 		return;
 
@@ -16,7 +16,7 @@ router.get("/listar", wrap(async (req: express.Request, res: express.Response) =
 }));
 
 router.get("/obter/:id", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res);
+	let u = await Usuario.cookie(req, res, false, true);
 	if (!u)
 		return;
 
@@ -37,7 +37,7 @@ router.get("/obter/:id", wrap(async (req: express.Request, res: express.Response
 }));
 
 router.post("/criar", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res, true);
+	let u = await Usuario.cookie(req, res, false, true);
 	if (!u)
 		return;
 
@@ -53,7 +53,7 @@ router.post("/criar", wrap(async (req: express.Request, res: express.Response) =
 }));
 
 router.post("/alterar", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res, true);
+	let u = await Usuario.cookie(req, res, false, true);
 	if (!u)
 		return;
 
@@ -69,7 +69,7 @@ router.post("/alterar", wrap(async (req: express.Request, res: express.Response)
 }));
 
 router.get("/excluir/:id", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res);
+	let u = await Usuario.cookie(req, res, false, true);
 	if (!u)
 		return;
 

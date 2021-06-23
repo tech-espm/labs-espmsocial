@@ -8,16 +8,16 @@ const router = express.Router();
 
 router.all("/criar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
-	if (!u || !u.admin)
-		res.redirect(appsettings.root + "/acesso");
+	if (!u)
+		res.redirect(appsettings.root + "/login");
 	else
 		res.render("causa/alterar", { titulo: "Criar Causa", usuario: u, item: null });
 }));
 
 router.all("/alterar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
-	if (!u || !u.admin) {
-		res.redirect(appsettings.root + "/acesso");
+	if (!u) {
+		res.redirect(appsettings.root + "/login");
 	} else {
 		let id = parseInt(req.query["id"] as string);
 		let item: Causa = null;
@@ -30,8 +30,8 @@ router.all("/alterar", wrap(async (req: express.Request, res: express.Response) 
 
 router.get("/listar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
-	if (!u || !u.admin)
-		res.redirect(appsettings.root + "/acesso");
+	if (!u)
+		res.redirect(appsettings.root + "/login");
 	else
 		res.render("causa/listar", { titulo: "Gerenciar Causas", usuario: u, lista: JSON.stringify(await Causa.listar()) });
 }));

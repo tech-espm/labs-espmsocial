@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.all("/criar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
-	if (!u || !u.admin)
+	if (!u || (!u.admin && !u.gestor))
 		res.redirect(appsettings.root + "/acesso");
 	else
 		res.render("orientador/alterar", { titulo: "Criar Orientador", usuario: u, item: null });
@@ -16,7 +16,7 @@ router.all("/criar", wrap(async (req: express.Request, res: express.Response) =>
 
 router.all("/alterar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
-	if (!u || !u.admin) {
+	if (!u || (!u.admin && !u.gestor)) {
 		res.redirect(appsettings.root + "/acesso");
 	} else {
 		let id = parseInt(req.query["id"] as string);
@@ -30,7 +30,7 @@ router.all("/alterar", wrap(async (req: express.Request, res: express.Response) 
 
 router.get("/listar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
-	if (!u || !u.admin)
+	if (!u || (!u.admin && !u.gestor))
 		res.redirect(appsettings.root + "/acesso");
 	else
 		res.render("orientador/listar", { titulo: "Gerenciar Orientadores", usuario: u, lista: JSON.stringify(await Orientador.listar()) });

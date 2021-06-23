@@ -84,8 +84,22 @@ export = class Equipe{
 		let res: string = null;
 
 		await Sql.conectar(async (sql: Sql) => {
+			await sql.beginTransaction();
+
+			if ((await sql.scalar("select 1 from usuario where idequipevigente = ? or idequipe1 = ? or idequipe2 = ? or idequipe3 = ? or idequipe4 = ? or idequipe5 = ? limit 1", [id, id, id, id, id, id]))) {
+				res = "A equipe não pode ser excluída porque pertence a um ou mais usuários";
+				return;
+			}
+
+			if ((await sql.scalar("select 1 from organizacao where idequipe_parceira = ? limit 1", [id]))) {
+				res = "A equipe não pode ser excluída porque ela é parceira de uma ou mais organizações";
+				return;
+			}
+
 			await sql.query("delete from equipe where id = ?", [id]);
-			
+
+			await sql.commit();
+
 			if (!sql.linhasAfetadas)
 				res = "Equipe não encontrada";
 		});

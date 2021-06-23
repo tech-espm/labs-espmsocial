@@ -37,7 +37,7 @@
 		deferRender: true,
 		columns: [
 			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"<%- root %>/representante/alterar?id=" + row.id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
-            { title: "Ong","class": "col-15", render: encode, data: "ong" },
+            { title: "Organização","class": "col-15", render: encode, data: "organizacao" },
             { title: "Nome", "class": "col-20", render: encode, data: "nome" },
             { title: "Email", "class": "col-15",render: encode, data: "email" },
             { title: "Telefone","class": "col-10", render: encode, data: "telefone" },
@@ -71,7 +71,7 @@
 				Notification.success("Representante excluído com sucesso! " + emoji.happy);
 				tabela.row(trClicada).remove().draw();
 			} else {
-				Notification.error(response.value, true);
+				Notification.error(response.value + " " + emoji.sad, true);
 			}
 			trClicada = null;
 		});

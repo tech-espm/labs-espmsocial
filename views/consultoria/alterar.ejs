@@ -17,11 +17,11 @@
                 </div>
 
                 <div class="form-group">
-					<label for="idong">ONG</label>
-					<select id="idong" name="idong" class="form-control" size="1">
+					<label for="idorganizacao">Organização</label>
+					<select id="idorganizacao" name="idorganizacao" class="form-control" size="1">
 						<option value="">Selecione...</option>
-						<% for (let i = 0; i < ongs.length; i++) { %>
-						<option value="<%= ongs[i].id %>" <%-((item && item.idong === ongs[i].id) ? 'selected="selected"' : '') %>><%= ongs[i].nome %></option>
+						<% for (let i = 0; i < organizacoes.length; i++) { %>
+						<option value="<%= organizacoes[i].id %>" <%-((item && item.idorganizacao === organizacoes[i].id) ? 'selected="selected"' : '') %>><%= organizacoes[i].nome %></option>
 						<% } %>
 					</select>
                 </div>
@@ -48,7 +48,7 @@
             idorientador: {
 				required: true
             },
-            idong: {
+            idorganizacao: {
 				required: true
             },
             nome: {
@@ -70,7 +70,7 @@
 				if (response.success)
 					Notification.success("Consultoria alterada com sucesso! " + emoji.happy);
 				else
-					Notification.error(response.value, true);
+					Notification.error(response.value + " " + emoji.sad, true);
 			});
 
 			//<% } else { %>
@@ -80,7 +80,7 @@
 					resetForm("#form");
 					Notification.success("Consultoria criada com sucesso! " + emoji.happy);
 				} else {
-					Notification.error(response.value, true);
+					Notification.error(response.value + " " + emoji.sad, true);
 				}
 			});
 
