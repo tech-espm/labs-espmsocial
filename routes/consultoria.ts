@@ -1,5 +1,5 @@
 import express = require("express");
-import wrap = require("express-async-error-wrapper");
+import wrap = require("../infra/wrap");
 import Consultoria = require("../models/consultoria");
 import Usuario = require("../models/usuario");
 import Ong = require("../models/ong");
@@ -27,7 +27,7 @@ router.all("/alterar", wrap(async (req: express.Request, res: express.Response) 
 	if (!u || !u.admin) {
 		res.redirect(appsettings.root + "/acesso");
 	} else {
-		let id = parseInt(req.query["id"]);
+		let id = parseInt(req.query["id"] as string);
 		let item: Consultoria = null;
 		if (isNaN(id) || !(item = await Consultoria.obter(id)))
 			res.render("home/nao-encontrado", { usuario: u });

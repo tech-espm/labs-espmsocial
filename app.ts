@@ -18,9 +18,8 @@
 // na opção "Install Missing npm Package(s)"
 //****************************************************************
 
-import debug = require("debug");
 import express = require("express");
-import wrap = require("express-async-error-wrapper");
+import wrap = require("./infra/wrap");
 import cookieParser = require("cookie-parser"); // https://stackoverflow.com/a/16209531/3569421
 import path = require("path");
 import appsettings = require("./appsettings");
@@ -28,8 +27,8 @@ import appsettings = require("./appsettings");
 // @@@ Configura o cache, para armazenar as 200 últimas páginas
 // já processadas, por ordem de uso
 import ejs = require("ejs");
-import lru = require("lru-cache");
-ejs.cache = lru(200);
+import LRU = require("lru-cache");
+ejs.cache = new LRU(200);
 
 const app = express();
 
@@ -160,5 +159,5 @@ app.use(wrap(async (req: express.Request, res: express.Response, next: express.N
 //});
 
 const server = app.listen(appsettings.port, process.env.IP || "127.0.0.1", () => {
-	debug("Express server listening on port " + server.address()["port"]);
+	console.log("Express server listening on port " + server.address()["port"]);
 });

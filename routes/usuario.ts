@@ -1,5 +1,5 @@
 ﻿import express = require("express");
-import wrap = require("express-async-error-wrapper");
+import wrap = require("../infra/wrap");
 import Cargo = require("../models/cargo");
 import Equipe = require("../models/equipe");
 import Usuario = require("../models/usuario");
@@ -26,7 +26,7 @@ router.all("/alterar", wrap(async (req: express.Request, res: express.Response) 
 	if (!u || !u.admin) {
 		res.redirect(appsettings.root + "/acesso");
 	} else {
-		let id = parseInt(req.query["id"]);
+		let id = parseInt(req.query["id"] as string);
 		let item: Usuario = null;
 		if (isNaN(id) || !(item = await Usuario.obter(id)))
 			res.render("home/nao-encontrado", { usuario: u });

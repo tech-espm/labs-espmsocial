@@ -1,5 +1,5 @@
 ﻿import express = require("express");
-import wrap = require("express-async-error-wrapper");
+import wrap = require("../../infra/wrap");
 import jsonRes = require("../../utils/jsonRes");
 import Usuario = require("../../models/usuario");
 
@@ -18,7 +18,7 @@ router.get("/obter", wrap(async (req: express.Request, res: express.Response) =>
 	let u = await Usuario.cookie(req, res, true);
 	if (!u)
 		return;
-	let id = parseInt(req.query["id"]);
+	let id = parseInt(req.query["id"] as string);
 	res.json(isNaN(id) ? null : await Usuario.obter(id));
 }));
 
@@ -45,7 +45,7 @@ router.get("/excluir", wrap(async (req: express.Request, res: express.Response) 
 	let u = await Usuario.cookie(req, res, true);
 	if (!u)
 		return;
-	let id = parseInt(req.query["id"]);
+	let id = parseInt(req.query["id"] as string);
 	jsonRes(res, 400, isNaN(id) ? "Dados inválidos" : (id === u.id ? "Um usuário não pode excluir a si próprio" : await Usuario.excluir(id)));
 }));
 
@@ -53,7 +53,7 @@ router.get("/redefinirSenha", wrap(async (req: express.Request, res: express.Res
 	let u = await Usuario.cookie(req, res, true);
 	if (!u)
 		return;
-	let id = parseInt(req.query["id"]);
+	let id = parseInt(req.query["id"] as string);
 	jsonRes(res, 400, isNaN(id) ? "Dados inválidos" : (id === u.id ? "Um usuário não pode redefinir sua própria senha" : await Usuario.redefinirSenha(id)));
 }));
 

@@ -73,7 +73,7 @@ export = class Ong {
 			if (lista && lista[0]) {
 				ong = lista[0];
 				ong.causas = [];
-				const causas = await sql.query("select idcausa from ong_causa where idong = ?", [id]);
+				const causas: any[] = await sql.query("select idcausa from ong_causa where idong = ?", [id]);
 				if (causas) {
 					for (let i = 0; i < causas.length; i++)
 						ong.causas.push(causas[i].idcausa);
