@@ -11,36 +11,88 @@
 					<input id="login" name="login" maxlength="100" class="form-control lower" type="text" spellcheck="false" value="<%=(item ? item.login : '') %>" <%=(item ? 'readonly="readonly"' : '') %> />
 				</div>
 
+				<div class="row">
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="colegiado">Colegiado</label>
+							<select id="colegiado" name="colegiado" size="1" class="form-control">
+								<option value="">Selecione...</option>
+								<option value="1" <%=((item && item.colegiado) ? 'selected="selected"' : '') %>>Sim</option>
+								<option value="0" <%=((item && !item.colegiado) ? 'selected="selected"' : '') %>>Não</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<div class="form-group">
+							<label for="ativo">Ativo</label>
+							<select id="ativo" name="ativo" size="1" class="form-control">
+								<option value="">Selecione...</option>
+								<option value="1" <%=((item && item.ativo) ? 'selected="selected"' : '') %>>Sim</option>
+								<option value="0" <%=((item && !item.ativo) ? 'selected="selected"' : '') %>>Não</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
 				<div class="form-group">
 					<label for="nome">Nome</label>
 					<input id="nome" name="nome" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.nome : '') %>" />
 				</div>
 
 				<div class="form-group">
-					<label for="idcargo">Cargo</label>
-					<select id="idcargo" name="idcargo" class="form-control" size="1">
-						<option value="">SELECIONE...</option>
+					<label for="idcargovigente">Cargo Vigente</label>
+					<select id="idcargovigente" name="idcargovigente" class="form-control" size="1">
+						<option value="">Selecione...</option>
 						<% for (let i = 0; i < cargos.length; i++) { %>
-						<option value="<%= cargos[i].id %>" <%-((item && item.idcargo === cargos[i].id) ? 'selected="selected"' : '') %>><%= cargos[i].nome %></option>
+						<option value="<%= cargos[i].id %>" <%-((item && item.idcargovigente === cargos[i].id) ? 'selected="selected"' : '') %>><%= cargos[i].nome %></option>
 						<% } %>
 					</select>
 				</div>
 
 				<div class="form-group">
-					<label for="idequipe">Equipe</label>
-					<select id="idequipe" name="idequipe" class="form-control" size="1">
-						<option value="">SELECIONE...</option>
+					<label for="idequipevigente">Equipe Vigente</label>
+					<select id="idequipevigente" name="idequipevigente" class="form-control" size="1">
+						<option value="">Selecione...</option>
 						<% for (let i = 0; i < equipes.length; i++) { %>
-						<option value="<%= equipes[i].id %>" <%-((item && item.idequipe === equipes[i].id) ? 'selected="selected"' : '') %>><%= equipes[i].nome %></option>
+						<option value="<%= equipes[i].id %>" <%-((item && item.idequipevigente === equipes[i].id) ? 'selected="selected"' : '') %>><%= equipes[i].nome %></option>
 						<% } %>
 					</select>
 				</div>
 
-                <div class="form-group">
-					<label for="email">Email</label>
-					<input id="email" name="email" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.email : '') %>" />
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="idcurso">Curso</label>
+							<select id="idcurso" name="idcurso" class="form-control" size="1">
+								<option value="">Selecione...</option>
+								<% for (let i = 0; i < cursos.length; i++) { %>
+								<option value="<%= cursos[i].id %>" <%-((item && item.idcurso === cursos[i].id) ? 'selected="selected"' : '') %>><%= cursos[i].nome %></option>
+								<% } %>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="idgenero">Gênero</label>
+							<select id="idgenero" name="idgenero" class="form-control" size="1">
+								<option value="">Selecione...</option>
+								<% for (let i = 0; i < generos.length; i++) { %>
+								<option value="<%= generos[i].id %>" <%-((item && item.idgenero === generos[i].id) ? 'selected="selected"' : '') %>><%= generos[i].nome %></option>
+								<% } %>
+							</select>
+						</div>
+					</div>
 				</div>
-				
+
+				<hr style="margin: 30px 0 45px;" />
+
+				<h2 class="text-center" style="margin: 45px 0;">Contato</h2>
+
+				<div class="form-group">
+					<label for="email">E-mail</label>
+					<input id="email" name="email" maxlength="100" class="form-control" type="email" spellcheck="false" value="<%=(item ? item.email : '') %>" />
+				</div>
+
 				<div class="row">
 					<div class="col-sm-6">
 						<div class="form-group">
@@ -50,21 +102,35 @@
 					</div>
 					<div class="col-sm-6">
 						<div class="form-group">
-							<label for="whatsapp">Whatsapp</label>
+							<label for="whatsapp">WhatsApp</label>
 							<input id="whatsapp" name="whatsapp" maxlength="20" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.whatsapp : '') %>" />
 						</div>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label for="rede_social">Rede Social</label>
-					<input id="rede_social" name="rede_social" maxlength="100" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.rede_social : '') %>" />
-				</div>	
+					<label for="instagram">Instagram</label>
+					<input id="instagram" name="instagram" maxlength="100" class="form-control" type="url" spellcheck="false" value="<%=(item ? item.instagram : '') %>" />
+				</div>
 
 				<div class="form-group">
-					<label for="curso">Curso</label>
-					<input id="curso" name="curso" maxlength="50" class="form-control" type="text" spellcheck="false" value="<%=(item ? item.curso : '') %>" />
-				</div>		
+					<label for="facebook">Facebook</label>
+					<input id="facebook" name="facebook" maxlength="100" class="form-control" type="url" spellcheck="false" value="<%=(item ? item.facebook : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="linkedin">LinkedIn</label>
+					<input id="linkedin" name="linkedin" maxlength="100" class="form-control" type="url" spellcheck="false" value="<%=(item ? item.linkedin : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="observacoes">Observações</label>
+					<input id="observacoes" name="observacoes" maxlength="100" class="form-control" type="text" value="<%=(item ? item.observacoes : '') %>" />
+				</div>
+
+				<hr style="margin: 45px 0 45px;" />
+
+				<h2 class="text-center" style="margin: 45px 0;">Permanência</h2>
 
 				<div class="row">
 					<div class="col-sm-6">
@@ -82,35 +148,187 @@
 				</div>
 
 				<div class="row">
-					<div class="col-sm-4">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="data_entrada">Data de Entrada</label>
+							<input id="data_entrada" name="data_entrada" class="form-control" type="date" value="<%=(item ? item.data_entrada : '') %>" />
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="data_saida">Data de Saída</label>
+							<input id="data_saida" name="data_saida" class="form-control" type="date" value="<%=(item ? item.data_saida : '') %>" />
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-6">
 						<div class="form-group">
 							<label for="semestre_entrada">Semestre Entrada</label>
 							<input id="semestre_entrada" name="semestre_entrada" class="form-control" type="number" min="1" max="12" value="<%=(item ? item.semestre_entrada : '') %>" />
 						</div>
 					</div>
-					<div class="col-sm-4">
+					<div class="col-sm-6">
 						<div class="form-group">
 							<label for="semestre_saida">Semestre Saída</label>
 							<input id="semestre_saida" name="semestre_saida" class="form-control" type="number" min="1" max="12" value="<%=(item ? item.semestre_saida : '') %>" />
 						</div>
 					</div>
-					<div class="col-sm-4">
+				</div>
+
+				<div class="row">
+					<div class="col-sm-6">
 						<div class="form-group">
-							<label for="semestre_atual">Semestre Atual</label>
+							<label for="semestre_atual">Semestre Vigente</label>
 							<input id="semestre_atual" name="semestre_atual" class="form-control" type="number" min="1" max="12" value="<%=(item ? item.semestre_atual : '') %>" />
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="semestre_permanencia">Permanência</label>
+							<input id="semestre_permanencia" name="semestre_permanencia" class="form-control" type="number" min="1" max="999" value="<%=(item ? item.semestre_permanencia : '') %>" />
 						</div>
 					</div>
 				</div>
 
+				<hr style="margin: 30px 0 45px;" />
+
+				<h2 class="text-center" style="margin: 45px 0;">Histórico</h2>
+
 				<div class="form-group">
-					<label for="ativo">Ativo</label>
-					<select id="ativo" name="ativo" size="1" class="form-control">
-						<option value="">SELECIONE...</option>
-						<option value="1" <%=((item && item.ativo) ? 'selected="selected"' : '') %>>Sim</option>
-						<option value="0" <%=((item && !item.ativo) ? 'selected="selected"' : '') %>>Não</option>
+					<label for="cargodata1">Data do Cargo 1</label>
+					<input id="cargodata1" name="cargodata1" class="form-control" type="date" value="<%=(item ? item.cargodata1 : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="idcargo1">Cargo 1</label>
+					<select id="idcargo1" name="idcargo1" class="form-control" size="1">
+						<option value="">Selecione...</option>
+						<% for (let i = 0; i < cargos.length; i++) { %>
+						<option value="<%= cargos[i].id %>" <%-((item && item.idcargo1 === cargos[i].id) ? 'selected="selected"' : '') %>><%= cargos[i].nome %></option>
+						<% } %>
 					</select>
 				</div>
-				
+
+				<div class="form-group">
+					<label for="idequipe1">Equipe 1</label>
+					<select id="idequipe1" name="idequipe1" class="form-control" size="1">
+						<option value="">Selecione...</option>
+						<% for (let i = 0; i < equipes.length; i++) { %>
+						<option value="<%= equipes[i].id %>" <%-((item && item.idequipe1 === equipes[i].id) ? 'selected="selected"' : '') %>><%= equipes[i].nome %></option>
+						<% } %>
+					</select>
+				</div>
+
+				<hr />
+
+				<div class="form-group">
+					<label for="cargodata2">Data do Cargo 2</label>
+					<input id="cargodata2" name="cargodata2" class="form-control" type="date" value="<%=(item ? item.cargodata2 : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="idcargo2">Cargo 2</label>
+					<select id="idcargo2" name="idcargo2" class="form-control" size="1">
+						<option value="">Selecione...</option>
+						<% for (let i = 0; i < cargos.length; i++) { %>
+						<option value="<%= cargos[i].id %>" <%-((item && item.idcargo2 === cargos[i].id) ? 'selected="selected"' : '') %>><%= cargos[i].nome %></option>
+						<% } %>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="idequipe2">Equipe 2</label>
+					<select id="idequipe2" name="idequipe2" class="form-control" size="1">
+						<option value="">Selecione...</option>
+						<% for (let i = 0; i < equipes.length; i++) { %>
+						<option value="<%= equipes[i].id %>" <%-((item && item.idequipe2 === equipes[i].id) ? 'selected="selected"' : '') %>><%= equipes[i].nome %></option>
+						<% } %>
+					</select>
+				</div>
+
+				<hr />
+
+				<div class="form-group">
+					<label for="cargodata3">Data do Cargo 3</label>
+					<input id="cargodata3" name="cargodata3" class="form-control" type="date" value="<%=(item ? item.cargodata3 : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="idcargo3">Cargo 3</label>
+					<select id="idcargo3" name="idcargo3" class="form-control" size="1">
+						<option value="">Selecione...</option>
+						<% for (let i = 0; i < cargos.length; i++) { %>
+						<option value="<%= cargos[i].id %>" <%-((item && item.idcargo3 === cargos[i].id) ? 'selected="selected"' : '') %>><%= cargos[i].nome %></option>
+						<% } %>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="idequipe3">Equipe 3</label>
+					<select id="idequipe3" name="idequipe3" class="form-control" size="1">
+						<option value="">Selecione...</option>
+						<% for (let i = 0; i < equipes.length; i++) { %>
+						<option value="<%= equipes[i].id %>" <%-((item && item.idequipe3 === equipes[i].id) ? 'selected="selected"' : '') %>><%= equipes[i].nome %></option>
+						<% } %>
+					</select>
+				</div>
+
+				<hr />
+
+				<div class="form-group">
+					<label for="cargodata4">Data do Cargo 4</label>
+					<input id="cargodata4" name="cargodata4" class="form-control" type="date" value="<%=(item ? item.cargodata4 : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="idcargo4">Cargo 4</label>
+					<select id="idcargo4" name="idcargo4" class="form-control" size="1">
+						<option value="">Selecione...</option>
+						<% for (let i = 0; i < cargos.length; i++) { %>
+						<option value="<%= cargos[i].id %>" <%-((item && item.idcargo4 === cargos[i].id) ? 'selected="selected"' : '') %>><%= cargos[i].nome %></option>
+						<% } %>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="idequipe4">Equipe 4</label>
+					<select id="idequipe4" name="idequipe4" class="form-control" size="1">
+						<option value="">Selecione...</option>
+						<% for (let i = 0; i < equipes.length; i++) { %>
+						<option value="<%= equipes[i].id %>" <%-((item && item.idequipe4 === equipes[i].id) ? 'selected="selected"' : '') %>><%= equipes[i].nome %></option>
+						<% } %>
+					</select>
+				</div>
+
+				<hr />
+
+				<div class="form-group">
+					<label for="cargodata5">Data do Cargo 5</label>
+					<input id="cargodata5" name="cargodata5" class="form-control" type="date" value="<%=(item ? item.cargodata5 : '') %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="idcargo5">Cargo 5</label>
+					<select id="idcargo5" name="idcargo5" class="form-control" size="1">
+						<option value="">Selecione...</option>
+						<% for (let i = 0; i < cargos.length; i++) { %>
+						<option value="<%= cargos[i].id %>" <%-((item && item.idcargo5 === cargos[i].id) ? 'selected="selected"' : '') %>><%= cargos[i].nome %></option>
+						<% } %>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="idequipe5">Equipe 5</label>
+					<select id="idequipe5" name="idequipe5" class="form-control" size="1">
+						<option value="">Selecione...</option>
+						<% for (let i = 0; i < equipes.length; i++) { %>
+						<option value="<%= equipes[i].id %>" <%-((item && item.idequipe5 === equipes[i].id) ? 'selected="selected"' : '') %>><%= equipes[i].nome %></option>
+						<% } %>
+					</select>
+				</div>
+
 			</div>
 			<div class="panel-footer">
 				<input value="<%=(item ? 'Salvar Alterações' : 'Criar Usuário') %>" class="btn btn-primary btn-outline btn-lg btn-block" type="submit" />
@@ -131,78 +349,25 @@
 		rules: {
 			login: {
 				required: true,
-				minlength: 3,
-				maxlength: 100
+				minlength: 3
+			},
+			colegiado: {
+				required: true
+			},
+			ativo: {
+				required: true
 			},
 			nome: {
 				required: true,
-				minlength: 3,
-				maxlength: 100
+				minlength: 3
 			},
-			idcargo: {
+			idcargovigente: {
 				required: true
 			},
-			idequipe: {
+			idcurso: {
 				required: true
 			},
-			email: {
-				required: true,
-				minlength: 3,
-				maxlength: 100,
-				email: true
-            } ,
-			telefone: {
-				required: true,
-				minlength: 3,
-				maxlength: 20
-			} ,
-			whatsapp: {
-				required: true,
-				minlength: 3,
-				maxlength: 20
-			} ,
-			rede_social: {
-				required: true,
-				minlength: 3,
-				maxlength: 100
-			} ,
-			curso: {
-				required: true,
-				minlength: 3,
-				maxlength: 50
-			} ,
-			periodo_entrada: {
-				required: true,
-				minlength: 3,
-				maxlength: 20
-			} ,
-			periodo_saida: {
-				required: function () {
-					return !!$("#semestre_saida").val();
-				},
-				maxlength: 20
-			} ,
-			semestre_entrada: {
-				required: true,
-				min: 1,
-				max: 12,
-				number: true
-			},
-			semestre_saida: {
-				required: function () {
-					return !!$("#periodo_saida").val();
-				},
-				min: 1,
-				max: 12,
-				number: true
-			},
-			semestre_atual: {
-				required: true,
-				min: 1,
-				max: 12,
-				number: true
-			},
-			ativo:{
+			idgenero: {
 				required: true
 			}
 		},

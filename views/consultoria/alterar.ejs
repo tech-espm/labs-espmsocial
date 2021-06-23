@@ -9,7 +9,7 @@
                 <div class="form-group">
 					<label for="idorientador">Orientador</label>
 					<select id="idorientador" name="idorientador" class="form-control" size="1">
-						<option value="">SELECIONE...</option>
+						<option value="">Selecione...</option>
 						<% for (let i = 0; i < orientadores.length; i++) { %>
 						<option value="<%= orientadores[i].id %>" <%-((item && item.idorientador === orientadores[i].id) ? 'selected="selected"' : '') %>><%= orientadores[i].nome %></option>
 						<% } %>
@@ -19,7 +19,7 @@
                 <div class="form-group">
 					<label for="idong">ONG</label>
 					<select id="idong" name="idong" class="form-control" size="1">
-						<option value="">SELECIONE...</option>
+						<option value="">Selecione...</option>
 						<% for (let i = 0; i < ongs.length; i++) { %>
 						<option value="<%= ongs[i].id %>" <%-((item && item.idong === ongs[i].id) ? 'selected="selected"' : '') %>><%= ongs[i].nome %></option>
 						<% } %>

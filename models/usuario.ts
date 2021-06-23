@@ -9,6 +9,8 @@ import intToHex = require("../utils/intToHex");
 import Cargo = require("./cargo");
 import FS = require("../infra/fs");
 import Upload = require("../infra/upload");
+import DataUtil = require("../utils/dataUtil");
+import emailValido = require("../utils/emailValido");
 
 export = class Usuario {
 
@@ -19,22 +21,45 @@ export = class Usuario {
 	public id: number;
 	public login: string;
 	public nome: string;
-	public idcargo: number;
-	public idequipe: number;
+	public idcargovigente: number;
+	public idequipevigente: number;
+	public idcurso: number;
+	public idgenero: number;
+	public idcargo1: number;
+	public idcargo2: number;
+	public idcargo3: number;
+	public idcargo4: number;
+	public idcargo5: number;
+	public idequipe1: number;
+	public idequipe2: number;
+	public idequipe3: number;
+	public idequipe4: number;
+	public idequipe5: number;
+	public cargodata1: string;
+	public cargodata2: string;
+	public cargodata3: string;
+	public cargodata4: string;
+	public cargodata5: string;
 	public versao: number;
 	public senha: string;
-	public criacao: string;
 	public email: string;
 	public telefone: string;
 	public whatsapp: string;
-	public rede_social: string;
-	public curso: string;
+	public instagram: string;
+	public facebook: string;
+	public linkedin: string;
+	public observacoes: string;
 	public periodo_entrada: string;
 	public periodo_saida: string;
+	public data_entrada: string;
+	public data_saida: string;
 	public semestre_entrada: number;
 	public semestre_saida: number;
 	public semestre_atual: number;
+	public semestre_permanencia: number;
+	public colegiado: number;
 	public ativo: number;
+	public criacao: string;
 
 	// Utilizados apenas através do cookie
 	public admin: boolean;
@@ -56,7 +81,7 @@ export = class Usuario {
 			let usuario: Usuario = null;
 
 			await Sql.conectar(async (sql: Sql) => {
-				let rows = await sql.query("select id, login, nome, idcargo, versao, token from usuario where id = ?", [id]);
+				let rows = await sql.query("select id, login, nome, idcargovigente, versao, token from usuario where id = ? and ativo = 1", [id]);
 				let row: any;
 
 				if (!rows || !rows.length || !(row = rows[0]))
@@ -71,14 +96,14 @@ export = class Usuario {
 				u.id = id;
 				u.login = row.login as string;
 				u.nome = row.nome as string;
-				u.idcargo = row.idcargo as number;
+				u.idcargovigente = row.idcargovigente as number;
 				u.versao = row.versao as number;
-				u.admin = (u.idcargo === Cargo.IdCoordenadorDocente);
+				u.admin = (u.idcargovigente === Cargo.IdCoordenadorDocente);
 
 				usuario = u;
 			});
 
-			if (admin && usuario && usuario.idcargo !== Cargo.IdCoordenadorDocente)
+			if (admin && usuario && usuario.idcargovigente !== Cargo.IdCoordenadorDocente)
 				usuario = null;
 			if (!usuario && res) {
 				res.statusCode = 403;
@@ -106,7 +131,7 @@ export = class Usuario {
 		await Sql.conectar(async (sql: Sql) => {
 			login = login.normalize().trim().toLowerCase();
 
-			let rows = await sql.query("select id, nome, idcargo, versao, senha from usuario where login = ?", [login]);
+			let rows = await sql.query("select id, nome, idcargovigente, versao, senha from usuario where login = ? and ativo = 1", [login]);
 			let row: any;
 			let ok: boolean;
 
@@ -123,9 +148,9 @@ export = class Usuario {
 			u.id = row.id;
 			u.login = login;
 			u.nome = row.nome as string;
-			u.idcargo = row.idcargo as number;
+			u.idcargovigente = row.idcargovigente as number;
 			u.versao = row.versao as number;
-			u.admin = (u.idcargo === Cargo.IdCoordenadorDocente);
+			u.admin = (u.idcargovigente === Cargo.IdCoordenadorDocente);
 
 			res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
 		});
@@ -208,82 +233,251 @@ export = class Usuario {
 		if (u.nome.length < 3 || u.nome.length > 100)
 			return "Nome inválido";
 
-		u.idcargo = parseInt(u.idcargo as any);
-		if (isNaN(u.idcargo))
-			return "Cargo inválido";
+		u.idcargovigente = parseInt(u.idcargovigente as any);
+		if (isNaN(u.idcargovigente))
+			return "Cargo vigente inválido";
 
-		u.idequipe = parseInt(u.idequipe as any);
-		if (isNaN(u.idequipe))
-			return "Equipe inválida";
+		if (!u.idequipevigente)
+			u.idequipevigente = null;
+		else if (isNaN(u.idequipevigente = parseInt(u.idequipevigente as any)))
+			return "Equipe vigente inválida";
 
-		u.email = (u.email || "").normalize().trim();
-		if (u.email.length < 3 || u.email.length > 100)
-			return "Email inválido";
-
-		u.telefone = (u.telefone || "").normalize().trim();
-		if (u.telefone.length < 3 || u.telefone.length > 20)
-			return "Telefone inválido";
-
-		u.whatsapp = (u.whatsapp || "").normalize().trim();
-		if (u.whatsapp.length < 3 || u.whatsapp.length > 20)
-			return "Whatsapp inválido";
-
-		u.rede_social = (u.rede_social || "").normalize().trim();
-		if (u.rede_social.length < 3 || u.rede_social.length > 100)
-			return "Rede Social inválida";	
-
-		u.curso = (u.curso || "").normalize().trim();
-		if (u.curso.length < 3 || u.curso.length > 50)
+		u.idcurso = parseInt(u.idcurso as any);
+		if (isNaN(u.idcurso))
 			return "Curso inválido";
 
+		u.idgenero = parseInt(u.idgenero as any);
+		if (isNaN(u.idgenero))
+			return "Gênero inválido";
+
+		if (!u.idcargo1)
+			u.idcargo1 = null;
+		else if (isNaN(u.idcargo1 = parseInt(u.idcargo1 as any)))
+			return "Cargo inválido";
+
+		if (!u.idcargo2)
+			u.idcargo2 = null;
+		else if (isNaN(u.idcargo2 = parseInt(u.idcargo2 as any)))
+			return "Cargo inválido";
+
+		if (!u.idcargo3)
+			u.idcargo3 = null;
+		else if (isNaN(u.idcargo3 = parseInt(u.idcargo3 as any)))
+			return "Cargo inválido";
+
+		if (!u.idcargo4)
+			u.idcargo4 = null;
+		else if (isNaN(u.idcargo4 = parseInt(u.idcargo4 as any)))
+			return "Cargo inválido";
+
+		if (!u.idcargo5)
+			u.idcargo5 = null;
+		else if (isNaN(u.idcargo5 = parseInt(u.idcargo5 as any)))
+			return "Cargo inválido";
+
+		if (!u.idequipe1)
+			u.idequipe1 = null;
+		else if (isNaN(u.idequipe1 = parseInt(u.idequipe1 as any)))
+			return "Equipe inválida";
+
+		if (!u.idequipe2)
+			u.idequipe2 = null;
+		else if (isNaN(u.idequipe2 = parseInt(u.idequipe2 as any)))
+			return "Equipe inválida";
+
+		if (!u.idequipe3)
+			u.idequipe3 = null;
+		else if (isNaN(u.idequipe3 = parseInt(u.idequipe3 as any)))
+			return "Equipe inválida";
+
+		if (!u.idequipe4)
+			u.idequipe4 = null;
+		else if (isNaN(u.idequipe4 = parseInt(u.idequipe4 as any)))
+			return "Equipe inválida";
+
+		if (!u.idequipe5)
+			u.idequipe5 = null;
+		else if (isNaN(u.idequipe5 = parseInt(u.idequipe5 as any)))
+			return "Equipe inválida";
+
+		if (!u.cargodata1)
+			u.cargodata1 = null;
+		else if (!(u.cargodata1 = DataUtil.converterDataISO(u.cargodata1.normalize().trim())))
+			return "Data do cargo inválida";
+
+		if (!u.cargodata2)
+			u.cargodata2 = null;
+		else if (!(u.cargodata2 = DataUtil.converterDataISO(u.cargodata2.normalize().trim())))
+			return "Data do cargo inválida";
+
+		if (!u.cargodata3)
+			u.cargodata3 = null;
+		else if (!(u.cargodata3 = DataUtil.converterDataISO(u.cargodata3.normalize().trim())))
+			return "Data do cargo inválida";
+
+		if (!u.cargodata4)
+			u.cargodata4 = null;
+		else if (!(u.cargodata4 = DataUtil.converterDataISO(u.cargodata4.normalize().trim())))
+			return "Data do cargo inválida";
+
+		if (!u.cargodata5)
+			u.cargodata5 = null;
+		else if (!(u.cargodata5 = DataUtil.converterDataISO(u.cargodata5.normalize().trim())))
+			return "Data do cargo inválida";
+
+		u.email = (u.email || "").normalize().trim().toLowerCase();
+		if (u.email) {
+			if (!emailValido(u.email) || u.email.length > 100)
+				return "E-mail inválido";
+		} else {
+			u.email = null;
+		}
+
+		u.telefone = (u.telefone || "").normalize().trim();
+		if (u.telefone) {
+			if (u.telefone.length < 3 || u.telefone.length > 20)
+				return "Telefone inválido";
+		} else {
+			u.telefone = null;
+		}
+
+		u.whatsapp = (u.whatsapp || "").normalize().trim();
+		if (u.whatsapp) {
+			if (u.whatsapp.length < 3 || u.whatsapp.length > 20)
+				return "WhatsApp inválido";
+		} else {
+			u.whatsapp = null;
+		}
+
+		u.instagram = (u.instagram || "").normalize().trim();
+		if (u.instagram) {
+			if (u.instagram.length < 3 || u.instagram.length > 100)
+				return "Instagram inválido";
+		} else {
+			u.instagram = null;
+		}
+
+		u.facebook = (u.facebook || "").normalize().trim();
+		if (u.facebook) {
+			if (u.facebook.length < 3 || u.facebook.length > 100)
+				return "Facebook inválido";
+		} else {
+			u.facebook = null;
+		}
+
+		u.linkedin = (u.linkedin || "").normalize().trim();
+		if (u.linkedin) {
+			if (u.linkedin.length < 3 || u.linkedin.length > 100)
+				return "LinkedIn inválido";
+		} else {
+			u.linkedin = null;
+		}
+
+		u.observacoes = (u.observacoes || "").normalize().trim();
+		if (u.observacoes) {
+			if (u.observacoes.length > 100)
+				return "Observações inválidas";
+		} else {
+			u.observacoes = null;
+		}
+
 		u.periodo_entrada = (u.periodo_entrada || "").normalize().trim();
-		if (u.periodo_entrada.length < 3 || u.periodo_entrada.length > 20)
-			return "Período de entrada inválido";
+		if (u.periodo_entrada) {
+			if (u.periodo_entrada.length > 20)
+				return "Período de entrada inválido";
+		} else {
+			u.periodo_entrada = null;
+		}
 
 		u.periodo_saida = (u.periodo_saida || "").normalize().trim();
-		if (u.periodo_saida.length > 20)
-			return "Período de saída inválido";
+		if (u.periodo_saida) {
+			if (u.periodo_saida.length > 20)
+				return "Período de saída inválido";
+		} else {
+			u.periodo_saida = null;
+		}
 
-		u.semestre_entrada = parseInt(u.semestre_entrada as any);
-		if (isNaN(u.semestre_entrada) || u.semestre_entrada <= 0 || u.semestre_entrada > 12)
-			return "Semestre de entrada inválido";
+		if (!u.data_entrada)
+			u.data_entrada = null;
+		else if (!(u.data_entrada = DataUtil.converterDataISO(u.data_entrada.normalize().trim())))
+			return "Data de entrada inválida";
+
+		if (!u.data_saida)
+			u.data_saida = null;
+		else if (!(u.data_saida = DataUtil.converterDataISO(u.data_saida.normalize().trim())))
+			return "Data de saída inválida";
+
+		if (!u.semestre_entrada) {
+			u.semestre_entrada = null;
+		} else {
+			u.semestre_entrada = parseInt(u.semestre_entrada as any);
+			if (isNaN(u.semestre_entrada) || u.semestre_entrada > 12)
+				return "Semestre de entrada inválido";
+		}
 
 		if (!u.semestre_saida) {
 			u.semestre_saida = null;
 		} else {
 			u.semestre_saida = parseInt(u.semestre_saida as any);
-			if (isNaN(u.semestre_saida) || u.semestre_saida < u.semestre_entrada || u.semestre_saida > 12)
+			if (isNaN(u.semestre_saida) || u.semestre_saida > 12)
 				return "Semestre de saída inválido";
 		}
 
-		u.semestre_atual = parseInt(u.semestre_atual as any);
-		if (isNaN(u.semestre_atual) || u.semestre_atual < u.semestre_entrada || u.semestre_atual > 12 || (u.semestre_saida && u.semestre_atual !== u.semestre_saida))
-			return "Semestre atual inválido";
+		if (!u.semestre_atual) {
+			u.semestre_atual = null;
+		} else {
+			u.semestre_atual = parseInt(u.semestre_atual as any);
+			if (isNaN(u.semestre_atual) || u.semestre_atual > 12)
+				return "Semestre atual inválido";
+		}
 
-		if (u.periodo_saida && !u.semestre_saida)
-			return "Semestre de saída é obrigatório se o período de saída for fornecido";
+		if (!u.semestre_permanencia) {
+			u.semestre_permanencia = null;
+		} else {
+			u.semestre_permanencia = parseInt(u.semestre_permanencia as any);
+			if (isNaN(u.semestre_permanencia))
+				return "Permanência inválida";
+		}
 
-		if (!u.periodo_saida && u.semestre_saida)
-			return "Período de saída é obrigatório se o semestre de saída for fornecido";
+		u.colegiado = (parseInt(u.colegiado as any) ? 1 : 0);
+
+		u.ativo = (parseInt(u.ativo as any) ? 1 : 0);
 
 		return null;
 	}
 
-	public static async listar_ativo(): Promise<Usuario[]> {
+	public static async listar(colegiado: boolean): Promise<Usuario[]> {
 		let lista: Usuario[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select u.id, u.login, u.nome, c.nome cargo, e.nome equipe, u.versao, date_format(u.criacao, '%d/%m/%Y') criacao, u.email, u.telefone, u.whatsapp, u.rede_social, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo from usuario u inner join cargo c on (c.id = u.idcargo) inner join equipe e on (e.id = u.idequipe) where u.ativo = 1 order by u.login asc") as Usuario[];
-		});
-
-		return (lista || []);
-	}
-
-	public static async listar_inativo(): Promise<Usuario[]> {
-		let lista: Usuario[] = null;
-
-		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select u.id, u.login, u.nome, c.nome cargo, e.nome equipe, u.versao, date_format(u.criacao, '%d/%m/%Y') criacao, u.email, u.telefone, u.whatsapp, u.rede_social, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo from usuario u inner join cargo c on (c.id = u.idcargo) inner join equipe e on (e.id = u.idequipe) where u.ativo = 0 order by u.login asc ") as Usuario[];
+			lista = await sql.query(`
+			select
+			u.id, u.login, u.nome,
+			cv.nome cargovigente, ev.nome equipevigente,
+			c.nome curso, g.nome genero,
+			c1.nome cargo1, c2.nome cargo2, c3.nome cargo3, c4.nome cargo4, c5.nome cargo5,
+			e1.nome equipe1, e2.nome equipe2, e3.nome equipe3, e4.nome equipe4, e5.nome equipe5,
+			date_format(u.cargodata1, '%d/%m/%Y') cargodata1, date_format(u.cargodata2, '%d/%m/%Y') cargodata2, date_format(u.cargodata3, '%d/%m/%Y') cargodata3, date_format(u.cargodata4, '%d/%m/%Y') cargodata4, date_format(u.cargodata5, '%d/%m/%Y') cargodata5,
+			u.versao, u.email, u.telefone, u.whatsapp, u.instagram, u.facebook, u.linkedin, u.observacoes, u.periodo_entrada, u.periodo_saida,
+			date_format(u.data_entrada, '%d/%m/%Y') data_entrada, date_format(u.data_saida, '%d/%m/%Y') data_saida,
+			u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.semestre_permanencia, u.colegiado, u.ativo
+			from usuario u
+			inner join cargo cv on (cv.id = u.idcargovigente)
+			inner join curso c on (c.id = u.idcurso)
+			inner join genero g on (g.id = u.idgenero)
+			left join equipe ev on (ev.id = u.idequipevigente)
+			left join cargo c1 on (c1.id = u.idcargo1)
+			left join cargo c2 on (c2.id = u.idcargo2)
+			left join cargo c3 on (c3.id = u.idcargo3)
+			left join cargo c4 on (c4.id = u.idcargo4)
+			left join cargo c5 on (c5.id = u.idcargo5)
+			left join equipe e1 on (e1.id = u.idequipe1)
+			left join equipe e2 on (e2.id = u.idequipe2)
+			left join equipe e3 on (e3.id = u.idequipe3)
+			left join equipe e4 on (e4.id = u.idequipe4)
+			left join equipe e5 on (e5.id = u.idequipe5)
+			where colegiado = ${(colegiado ? 1 : 0)}
+			`) as Usuario[];
 		});
 
 		return (lista || []);
@@ -293,7 +487,51 @@ export = class Usuario {
 		let lista: Usuario[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select id, login, nome, idcargo, idequipe, versao, date_format(criacao, '%d/%m/%Y') criacao, email, telefone, whatsapp, rede_social, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo from usuario where id = ?", [id]) as Usuario[];
+			lista = await sql.query(`
+			select
+			id,
+			login,
+			nome,
+			idcargovigente,
+  			idequipevigente,
+			idcurso,
+			idgenero,
+			idcargo1,
+			idcargo2,
+			idcargo3,
+			idcargo4,
+			idcargo5,
+			idequipe1,
+			idequipe2,
+			idequipe3,
+			idequipe4,
+			idequipe5,
+			date_format(cargodata1, '%Y-%m-%d') cargodata1,
+			date_format(cargodata2, '%Y-%m-%d') cargodata2,
+			date_format(cargodata3, '%Y-%m-%d') cargodata3,
+			date_format(cargodata4, '%Y-%m-%d') cargodata4,
+			date_format(cargodata5, '%Y-%m-%d') cargodata5,
+			versao,
+			senha,
+			token,
+			email,
+			telefone,
+			whatsapp,
+			instagram,
+			facebook,
+			linkedin,
+			observacoes,
+			periodo_entrada,
+			periodo_saida,
+			date_format(data_entrada, '%Y-%m-%d') data_entrada,
+			date_format(data_saida, '%Y-%m-%d') data_saida,
+			semestre_entrada,
+			semestre_saida,
+			semestre_atual,
+			semestre_permanencia,
+			colegiado,
+			ativo
+			from usuario where id = ?`, [id]) as Usuario[];
 		});
 
 		return ((lista && lista[0]) || null);
@@ -310,7 +548,7 @@ export = class Usuario {
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
-				await sql.query("insert into usuario (login, nome, idcargo, idequipe, versao, senha, criacao, email, telefone, whatsapp, rede_social, curso, periodo_entrada, periodo_saida, semestre_entrada, semestre_saida, semestre_atual, ativo) values (?, ?, ?, ?, 0, ?, now(), ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?)", [u.login, u.nome, u.idcargo, u.idequipe, appsettings.usuarioHashSenhaPadrao, u.email, u.telefone, u.whatsapp, u.rede_social, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo]);
+				await sql.query("insert into usuario (login, nome, idcargovigente, idequipevigente, idcurso, idgenero, idcargo1, idcargo2, idcargo3, idcargo4, idcargo5, idequipe1, idequipe2, idequipe3, idequipe4, idequipe5, cargodata1, cargodata2, cargodata3, cargodata4, cargodata5, versao, senha, email, telefone, whatsapp, instagram, facebook, linkedin, observacoes, periodo_entrada, periodo_saida, data_entrada, data_saida, semestre_entrada, semestre_saida, semestre_atual, semestre_permanencia, colegiado, ativo, criacao) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())", [u.login, u.nome, u.idcargovigente, u.idequipevigente, u.idcurso, u.idgenero, u.idcargo1, u.idcargo2, u.idcargo3, u.idcargo4, u.idcargo5, u.idequipe1, u.idequipe2, u.idequipe3, u.idequipe4, u.idequipe5, u.cargodata1, u.cargodata2, u.cargodata3, u.cargodata4, u.cargodata5, appsettings.usuarioHashSenhaPadrao, u.email, u.telefone, u.whatsapp, u.instagram, u.facebook, u.linkedin, u.observacoes, u.periodo_entrada, u.periodo_saida, u.data_entrada, u.data_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.semestre_permanencia, u.colegiado, u.ativo]);
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {
@@ -319,7 +557,7 @@ export = class Usuario {
 							break;
 						case "ER_NO_REFERENCED_ROW":
 						case "ER_NO_REFERENCED_ROW_2":
-							res = "Cargo ou equipe não encontrado";
+							res = "Curso ou gênero não encontrado";
 							break;
 						default:
 							throw e;
@@ -343,7 +581,7 @@ export = class Usuario {
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
-				await sql.query("update usuario set nome = ?, idcargo = ?, idequipe = ?, email = ?, telefone=?, whatsapp=?, rede_social=?, curso=?, periodo_entrada=?, periodo_saida=?, semestre_entrada=?, semestre_saida=?, semestre_atual=?, ativo=? where id = ?", [u.nome, u.idcargo, u.idequipe, u.email, u.telefone, u.whatsapp, u.rede_social, u.curso, u.periodo_entrada, u.periodo_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.ativo, u.id]);
+				await sql.query("update usuario set nome = ?, idcargovigente = ?, idequipevigente = ?, idcurso = ?, idgenero = ?, idcargo1 = ?, idcargo2 = ?, idcargo3 = ?, idcargo4 = ?, idcargo5 = ?, idequipe1 = ?, idequipe2 = ?, idequipe3 = ?, idequipe4 = ?, idequipe5 = ?, cargodata1 = ?, cargodata2 = ?, cargodata3 = ?, cargodata4 = ?, cargodata5 = ?, email = ?, telefone = ?, whatsapp = ?, instagram = ?, facebook = ?, linkedin = ?, observacoes = ?, periodo_entrada = ?, periodo_saida = ?, data_entrada = ?, data_saida = ?, semestre_entrada = ?, semestre_saida = ?, semestre_atual = ?, semestre_permanencia = ?, colegiado = ?, ativo = ? where id = ?", [u.nome, u.idcargovigente, u.idequipevigente, u.idcurso, u.idgenero, u.idcargo1, u.idcargo2, u.idcargo3, u.idcargo4, u.idcargo5, u.idequipe1, u.idequipe2, u.idequipe3, u.idequipe4, u.idequipe5, u.cargodata1, u.cargodata2, u.cargodata3, u.cargodata4, u.cargodata5, u.email, u.telefone, u.whatsapp, u.instagram, u.facebook, u.linkedin, u.observacoes, u.periodo_entrada, u.periodo_saida, u.data_entrada, u.data_saida, u.semestre_entrada, u.semestre_saida, u.semestre_atual, u.semestre_permanencia, u.colegiado, u.ativo, u.id]);
 				res = sql.linhasAfetadas.toString();
 			} catch (e) {
 				if (e.code) {
@@ -353,7 +591,7 @@ export = class Usuario {
 							break;
 						case "ER_NO_REFERENCED_ROW":
 						case "ER_NO_REFERENCED_ROW_2":
-							res = "Cargo ou equipe não encontrado";
+							res = "Curso ou gênero não encontrado";
 							break;
 						default:
 							throw e;
