@@ -1,9 +1,46 @@
 ﻿<div class="row">
 	<div class="col-lg-12">
 		<div class="panel panel-default">
-			<div class="panel-body">
+			<div class="panel-body text-center">
 				Sistema da ESPM Social
+				<div class="col-xs-space-top" id="divInstalar" style="display: none;">
+					<button type="button" class="btn btn-sm btn-outline btn-default" onclick="instalar()"><i class="fa fa14 fa-fw fa-download"></i> Instalar app</button>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+<%- contentFor("scripts") %>
+<script type="text/javascript">
+	var installationPrompt = null;
+
+	function instalar() {
+		document.getElementById("divInstalar").style.display = "none";
+
+		if (installationPrompt) {
+			try {
+				var p = installationPrompt;
+				installationPrompt = null;
+				p["prompt"]();
+			} catch (ex) {
+				// Apenas ignora...
+			}
+		}
+	}
+
+	function beforeInstallPrompt(e) {
+		if (("preventDefault" in e))
+			e.preventDefault();
+
+		installationPrompt = e;
+
+		document.getElementById("divInstalar").style.display = (e ? "" : "none");
+	}
+
+	if ("serviceWorker" in navigator) {
+		window.addEventListener("beforeinstallprompt", beforeInstallPrompt);
+
+		navigator.serviceWorker.register("<%- root %>/sw.js");
+	}
+</script>

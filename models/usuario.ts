@@ -236,6 +236,9 @@ export = class Usuario {
 	}
 
 	private static validar(u: Usuario): string {
+		if (!u)
+			return "Dados inválidos";
+
 		u.nome = (u.nome || "").normalize().trim();
 		if (u.nome.length < 2 || u.nome.length > 100)
 			return "Nome inválido";
@@ -571,17 +574,14 @@ export = class Usuario {
 					switch (e.code) {
 						case "ER_DUP_ENTRY":
 							res = `O login ${u.login} já está em uso`;
-							break;
+							return;
 						case "ER_NO_REFERENCED_ROW":
 						case "ER_NO_REFERENCED_ROW_2":
 							res = "Curso ou gênero não encontrado";
-							break;
-						default:
-							throw e;
+							return;
 					}
-				} else {
-					throw e;
 				}
+				throw e;
 			}
 		});
 

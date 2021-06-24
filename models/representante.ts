@@ -10,6 +10,9 @@ export = class Representante {
     public whatsapp: string;
  
 	private static validar(r: Representante): string {
+		if (!r)
+			return "Dados inválidos";
+
 		r.nome = (r.nome || "").normalize().trim();
 		if (r.nome.length < 3 || r.nome.length > 100)
             return "Nome inválido";

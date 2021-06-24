@@ -1,6 +1,15 @@
 CREATE DATABASE IF NOT EXISTS backofficesocial DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_0900_ai_ci;
 USE backofficesocial;
 
+CREATE TABLE formacao (
+  id int NOT NULL,
+  nome varchar(100) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY formacao_nome_UN (nome)
+);
+
+INSERT INTO formacao (id, nome) VALUES (1, 'Professor'), (2, 'Mestrando'), (3, 'Mestre'), (4, 'Doutorando'), (5, 'Doutor');
+
 CREATE TABLE cargo (
   id int NOT NULL,
   nome varchar(50) NOT NULL,
@@ -152,8 +161,17 @@ CREATE TABLE representante (
 CREATE TABLE orientador (
   id int NOT NULL AUTO_INCREMENT,
   nome varchar(100) NOT NULL,
+  idformacao int NOT NULL,
+  idequipe int NULL,
+  email varchar(100) NULL,
+  telefone varchar(20) NULL,
+  whatsapp varchar(20) NULL,
+  observacoes varchar(100) NULL,
+  criacao datetime NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY orientador_nome_UN (nome)
+  UNIQUE KEY orientador_nome_UN (nome),
+  KEY orientador_idformacao_FK_idx (idformacao),
+  CONSTRAINT orientador_idformacao_FK FOREIGN KEY (idformacao) REFERENCES formacao (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 CREATE TABLE consultoria (

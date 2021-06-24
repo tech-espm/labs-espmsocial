@@ -13,6 +13,9 @@ export = class Consultoria{
 	public semestre: number;
 
 	private static validar(c: Consultoria): string {
+		if (!c)
+			return "Dados inválidos";
+
 		c.idorganizacao = parseInt(c.idorganizacao as any);
 		if (isNaN(c.idorganizacao))
 			return "Organização inválida";

@@ -8,26 +8,6 @@
 	</div>
 </div>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="modalExcluir">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Oops...</h4>
-			</div>
-			<div class="modal-body">
-				<p>
-					Tem certeza que deseja excluir o orientador  <span id="lblNome"></span>? Esta operação <b class="col-h">NÃO</b> pode ser desfeita, e <b class="col-h">TODAS AS RESPOSTAS</b> do orientador, de <b class="col-h">TODAS AS PESSOAS</b>, também serão <b class="col-h">EXCLUÍDAS</b>!
-				</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-danger" onclick="excluir()"><i class="fa fa-check"></i>Excluir</button>
-				<button type="button" class="btn btn-outline btn-default" data-dismiss="modal"><i class="fa fa-times"></i>Cancelar</button>
-			</div>
-		</div>
-	</div>
-</div>
-
 <%- contentFor("scripts") %>
 <script type="text/javascript">
 	//<![CDATA[
@@ -37,39 +17,47 @@
 		deferRender: true,
 		columns: [
 			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"<%- root %>/orientador/alterar?id=" + row.id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
-			{ title: "Nome", render: encode, data: "nome" },
+			{ title: "Nome", "class": "col-min", render: encode, data: "nome" },
+			{ title: "Formação", "class": "col-min", render: encode, data: "formacao" },
+			{ title: "Equipe", "class": "col-min", render: encode, data: "equipe" },
+			{ title: "E-mail", "class": "col-min", render: encode, data: "email" },
+			{ title: "Telefone", "class": "col-min", render: encode, data: "telefone" },
+			{ title: "WhatsApp", "class": "col-min", render: encode, data: "whatsapp" },
+			{ title: "Observações", "class": "col-min", render: encode, data: "observacoes" },
+			{ title: "Criação", "class": "col-min", "type": "customdateint", data: "criacao" }
 		],
 		data: <%- lista %>,
 		export: { title: "Orientadores" }
 	});
-	var trClicada;
+
 	$("#tabela").on("click", "tbody button", function () {
 		if (JsonWebApi.active)
 			return;
-		var orientador = tabela.row(trClicada = this.parentNode.parentNode).data();
+
+		var trClicada = this.parentNode.parentNode,
+			orientador = tabela.row(trClicada).data();
+
 		if (this.getAttribute("data-excluir")) {
-			$("#lblNome").text(orientador.nome);
-			$("#modalExcluir").modal({
-				backdrop: "static",
-				keyboard: true
+			Notification.okcancel("Tem certeza que deseja excluir o orientador " + orientador.nome + "? Esta operação NÃO pode ser desfeita!", null, true, "Excluir").then(function (result) {
+				if (JsonWebApi.active || !trClicada)
+					return;
+
+				if (result.value) {
+					Notification.wait();
+
+					JsonWebApi.get("<%- root %>/api/orientador/excluir/" + orientador.id, function (response) {
+						if (response.success) {
+							Notification.success("Orientador excluído com sucesso! " + emoji.happy);
+							tabela.row(trClicada).remove().draw();
+						} else {
+							Notification.error(response.value + " " + emoji.sad, true);
+						}
+						trClicada = null;
+					});
+				}
 			});
 		}
 	});
-	function excluir() {
-		if (JsonWebApi.active || !trClicada)
-			return;
-		$("#modalExcluir").modal("hide");
-		var orientador = tabela.row(trClicada).data();
-		Notification.wait();
-		JsonWebApi.get("<%- root %>/api/orientador/excluir/" + equipe.id, function (response) {
-			if (response.success) {
-				Notification.success("Orientador excluído com sucesso! " + emoji.happy);
-				tabela.row(trClicada).remove().draw();
-			} else {
-				Notification.error(response.value + " " + emoji.sad, true);
-			}
-			trClicada = null;
-		});
-	}
+
 	//]]>
 </script>

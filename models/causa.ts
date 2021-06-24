@@ -26,7 +26,10 @@ export = class Causa{
 		return ((lista && lista[0]) || null);
     }
     
-    private static validar(causa: Causa): string {      
+    private static validar(causa: Causa): string {
+		if (!causa)
+			return "Dados inválidos";
+
 		causa.nome = (causa.nome || "").normalize().trim();
 		if (causa.nome.length < 3 || causa.nome.length > 100)
 			return "Nome de causa inválido";

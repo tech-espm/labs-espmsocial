@@ -13,6 +13,18 @@ router.all("/", wrap(async (req: express.Request, res: express.Response) => {
 		res.render("home/dashboard", { titulo: "Dashboard", usuario: u });
 }));
 
+router.all("/offline", wrap(async (req: express.Request, res: express.Response) => {
+	res.render("home/offline", { layout: "layout-vazio" });
+}));
+
+router.all("/manifest.webmanifest", wrap(async (req: express.Request, res: express.Response) => {
+	res.contentType("application/manifest+json").render("home/manifest", { layout: "layout-vazio" });
+}));
+
+router.all("/sw.js", wrap(async (req: express.Request, res: express.Response) => {
+	res.contentType("text/javascript").render("home/sw", { layout: "layout-vazio" });
+}));
+
 // TELAS QUE A BIA FEZ:
 router.all("/consultoria", wrap(async (req: express.Request, res: express.Response) => {
 	res.render("home/consultoria", { layout: "layout-simples" });
