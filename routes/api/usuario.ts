@@ -15,7 +15,7 @@ router.post("/alterarPerfil", wrap(async (req: express.Request, res: express.Res
 }));
 
 router.get("/obter", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res, true);
+	let u = await Usuario.cookie(req, res, false, true);
 	if (!u)
 		return;
 	let id = parseInt(req.query["id"] as string);
@@ -23,7 +23,7 @@ router.get("/obter", wrap(async (req: express.Request, res: express.Response) =>
 }));
 
 router.post("/criar", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res, true);
+	let u = await Usuario.cookie(req, res, false, true);
 	if (!u)
 		return;
 	u = req.body as Usuario;
@@ -31,7 +31,7 @@ router.post("/criar", wrap(async (req: express.Request, res: express.Response) =
 }));
 
 router.post("/alterar", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res, true);
+	let u = await Usuario.cookie(req, res, false, true);
 	if (!u)
 		return;
 	let id = u.id;
@@ -42,7 +42,7 @@ router.post("/alterar", wrap(async (req: express.Request, res: express.Response)
 }));
 
 router.get("/excluir", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res, true);
+	let u = await Usuario.cookie(req, res, false, true);
 	if (!u)
 		return;
 	let id = parseInt(req.query["id"] as string);
@@ -50,7 +50,7 @@ router.get("/excluir", wrap(async (req: express.Request, res: express.Response) 
 }));
 
 router.get("/redefinirSenha", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req, res, true);
+	let u = await Usuario.cookie(req, res, false, true);
 	if (!u)
 		return;
 	let id = parseInt(req.query["id"] as string);
