@@ -631,10 +631,13 @@ export = class Usuario {
 		await Sql.conectar(async (sql: Sql) => {
 			id = parseInt(id as any);
 			await sql.query("delete from usuario where id = ?", [id]);
-			if (sql.linhasAfetadas)
-				FS.excluirArquivo(Usuario.CaminhoRelativoPerfil + id + ".jpg");
-			else
+			if (sql.linhasAfetadas) {
+				const caminhoRelativo = Usuario.CaminhoRelativoPerfil + id + ".jpg";
+				if (await FS.existeArquivo(caminhoRelativo))
+					await FS.excluirArquivo(caminhoRelativo);
+			} else {
 				res = "Usuário não encontrado";
+			}
 		});
 
 		return res;
