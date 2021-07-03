@@ -193,3 +193,14 @@ CREATE TABLE consultoria (
   CONSTRAINT consultoria_idorganizacao_FK FOREIGN KEY (idorganizacao) REFERENCES organizacao (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT consultoria_idorientador_FK FOREIGN KEY (idorientador) REFERENCES orientador (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
+
+CREATE TABLE consultoria_causa (
+  id int NOT NULL AUTO_INCREMENT,
+  idconsultoria int NOT NULL,
+  idcausa int NOT NULL,
+  PRIMARY KEY (id),
+  KEY consultoria_causa_idconsultoria_FK_idx (idconsultoria),
+  KEY consultoria_causa_idcausa_FK_idx (idcausa),
+  CONSTRAINT consultoria_causa_idconsultoria_FK FOREIGN KEY (idconsultoria) REFERENCES consultoria (id) ON DELETE CASCADE ON UPDATE RESTRICT,
+  CONSTRAINT consultoria_causa_idcausa_FK FOREIGN KEY (idcausa) REFERENCES causa (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+);

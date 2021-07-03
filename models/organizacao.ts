@@ -204,10 +204,19 @@ export = class Organizacao {
 
 				await sql.commit();
 			} catch (e) {
-				if (e.code && e.code === "ER_DUP_ENTRY")
-					res = `A organização ${organizacao.nome} já existe`;
-				else
-					throw e;
+				if (e.code) {
+					switch (e.code) {
+						case "ER_DUP_ENTRY":
+							res = `A organização ${organizacao.nome} já existe`;
+							return;
+						case "ER_NO_REFERENCED_ROW":
+						case "ER_NO_REFERENCED_ROW_2":
+							res = "Causa não encontrada";
+							return;
+					}
+				}
+
+				throw e;
 			}
 		});
 
@@ -239,10 +248,19 @@ export = class Organizacao {
 
 				await sql.commit();
 			} catch (e) {
-				if (e.code && e.code === "ER_DUP_ENTRY")
-					res = `A organização ${organizacao.nome} já existe`;
-				else
-					throw e;
+				if (e.code) {
+					switch (e.code) {
+						case "ER_DUP_ENTRY":
+							res = `A organização ${organizacao.nome} já existe`;
+							return;
+						case "ER_NO_REFERENCED_ROW":
+						case "ER_NO_REFERENCED_ROW_2":
+							res = "Causa não encontrada";
+							return;
+					}
+				}
+
+				throw e;
 			}
 		});
 

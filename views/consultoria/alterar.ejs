@@ -16,65 +16,98 @@
 					</select>
                 </div>
 
-                <div class="form-group">
-					<label for="idorientador">Orientador</label>
-					<select id="idorientador" name="idorientador" class="form-control" size="1">
-						<option value="">Selecione...</option>
-						<% for (let i = 0; i < orientadores.length; i++) { %>
-						<option value="<%= orientadores[i].id %>" <%-((item && item.idorientador === orientadores[i].id) ? 'selected="selected"' : '') %>><%= orientadores[i].nome %></option>
-						<% } %>
-					</select>
-                </div>
+				<hr style="margin: 45px 0;" />
 
-                <div class="form-group">
-					<label for="idgestor">Gestor</label>
-					<select id="idgestor" name="idgestor" class="form-control" size="1">
-						<option value="">Selecione...</option>
-						<% for (let i = 0; i < usuarios.length; i++) { %>
-						<option value="<%= usuarios[i].id %>" <%-((item && item.idgestor === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
-						<% } %>
-					</select>
-                </div>
+				<h2 class="text-center" style="margin: 45px 0;">Causas</h2>
 
-                <div class="form-group">
-					<label for="idconsultor">Consultor 1</label>
-					<select id="idconsultor" name="idconsultor" class="form-control" size="1">
-						<option value="">Selecione...</option>
-						<% for (let i = 0; i < usuarios.length; i++) { %>
-						<option value="<%= usuarios[i].id %>" <%-((item && item.idconsultor === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
-						<% } %>
-					</select>
-                </div>
+				<% for (let i = 0; i < causas.length; i++) { %>
+					<div class="checkbox">
+						<label><input type="checkbox" name="causas" value="<%=causas[i].id %>" <%=((item && item.causas && item.causas.indexOf(causas[i].id) >= 0) ? 'checked="checked"' : '') %> /> <%=causas[i].nome %></label>
+					</div>
+				<% } %>
 
-                <div class="form-group">
-					<label for="idconsultor2">Consultor 2</label>
-					<select id="idconsultor2" name="idconsultor2" class="form-control" size="1">
-						<option value="">Selecione...</option>
-						<% for (let i = 0; i < usuarios.length; i++) { %>
-						<option value="<%= usuarios[i].id %>" <%-((item && item.idconsultor2 === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
-						<% } %>
-					</select>
-                </div>
+				<hr style="margin: 45px 0;" />
 
-                <div class="form-group">
-					<label for="idconsultor3">Consultor 3</label>
-					<select id="idconsultor3" name="idconsultor3" class="form-control" size="1">
-						<option value="">Selecione...</option>
-						<% for (let i = 0; i < usuarios.length; i++) { %>
-						<option value="<%= usuarios[i].id %>" <%-((item && item.idconsultor3 === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
-						<% } %>
-					</select>
-                </div>
+				<h2 class="text-center" style="margin: 45px 0;">Membros</h2>
 
-                <div class="form-group">
-					<label for="idconsultor4">Consultor 4</label>
-					<select id="idconsultor4" name="idconsultor4" class="form-control" size="1">
-						<option value="">Selecione...</option>
-						<% for (let i = 0; i < usuarios.length; i++) { %>
-						<option value="<%= usuarios[i].id %>" <%-((item && item.idconsultor4 === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
-						<% } %>
-					</select>
-                </div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="idorientador">Orientador</label>
+							<select id="idorientador" name="idorientador" class="form-control" size="1">
+								<option value="">Selecione...</option>
+								<% for (let i = 0; i < orientadores.length; i++) { %>
+								<option value="<%= orientadores[i].id %>" <%-((item && item.idorientador === orientadores[i].id) ? 'selected="selected"' : '') %>><%= orientadores[i].nome %></option>
+								<% } %>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="idgestor">Gestor</label>
+							<select id="idgestor" name="idgestor" class="form-control" size="1">
+								<option value="">Selecione...</option>
+								<% for (let i = 0; i < usuarios.length; i++) { %>
+								<option value="<%= usuarios[i].id %>" <%-((item && item.idgestor === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
+								<% } %>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="idconsultor">Consultor 1</label>
+							<select id="idconsultor" name="idconsultor" class="form-control" size="1">
+								<option value="">Selecione...</option>
+								<% for (let i = 0; i < usuarios.length; i++) { %>
+								<option value="<%= usuarios[i].id %>" <%-((item && item.idconsultor === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
+								<% } %>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="idconsultor2">Consultor 2</label>
+							<select id="idconsultor2" name="idconsultor2" class="form-control" size="1">
+								<option value="">Selecione...</option>
+								<% for (let i = 0; i < usuarios.length; i++) { %>
+								<option value="<%= usuarios[i].id %>" <%-((item && item.idconsultor2 === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
+								<% } %>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="idconsultor3">Consultor 3</label>
+							<select id="idconsultor3" name="idconsultor3" class="form-control" size="1">
+								<option value="">Selecione...</option>
+								<% for (let i = 0; i < usuarios.length; i++) { %>
+								<option value="<%= usuarios[i].id %>" <%-((item && item.idconsultor3 === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
+								<% } %>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="idconsultor4">Consultor 4</label>
+							<select id="idconsultor4" name="idconsultor4" class="form-control" size="1">
+								<option value="">Selecione...</option>
+								<% for (let i = 0; i < usuarios.length; i++) { %>
+								<option value="<%= usuarios[i].id %>" <%-((item && item.idconsultor4 === usuarios[i].id) ? 'selected="selected"' : '') %>><%= usuarios[i].nome %></option>
+								<% } %>
+							</select>
+						</div>
+					</div>
+				</div>
+		
+				<hr style="margin: 45px 0;" />
+
+				<h2 class="text-center" style="margin: 45px 0;">Informações Adicionais</h2>
 
 				<div class="form-group">
 					<label for="categoria">Observações</label>

@@ -1,5 +1,6 @@
 import express = require("express");
 import wrap = require("../infra/wrap");
+import Causa = require("../models/causa");
 import Consultoria = require("../models/consultoria");
 import Usuario = require("../models/usuario");
 import Organizacao = require("../models/organizacao");
@@ -17,6 +18,7 @@ router.all("/criar", wrap(async (req: express.Request, res: express.Response) =>
 			titulo: "Criar Consultoria", 
 			usuario: u, 
 			item: null,
+			causas: await Causa.listar(),
 			usuarios: await Usuario.listarDropDown(),
 			orientadores: await Orientador.listarDropDown(),
 			organizacoes: await Organizacao.listarDropDown()
@@ -37,6 +39,7 @@ router.all("/alterar", wrap(async (req: express.Request, res: express.Response) 
 				titulo: "Editar Consultoria",
 				usuario: u,
 				item: item,
+				causas: await Causa.listar(),
 				usuarios: await Usuario.listarDropDown(),
 				orientadores: await Orientador.listarDropDown(),
 				organizacoes: await Organizacao.listarDropDown()

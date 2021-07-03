@@ -13,12 +13,13 @@
 	//<![CDATA[
 	"use strict";
 	var tabela = prepareDataTable("tabela", {
-		order: [[6, "asc"], [7, "asc"], [1, "asc"]],
+		order: [[10, "asc"], [11, "asc"], [1, "asc"]],
 		deferRender: true,
 		columns: [
 			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "id", render: function (v, type, row) { return "<a title=\"Editar\" href=\"<%- root %>/consultoria/alterar?id=" + row.id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
             { title: "Organização", "class": "col-min", render: encode, data: "organizacao" },
-            { title: "Orientador", "class": "col-min", render: encode, data: "orientador" },
+            { title: "Causas", "class": "col-min", render: encode, data: "causas" },
+			{ title: "Orientador", "class": "col-min", render: encode, data: "orientador" },
             { title: "Gestor", "class": "col-min", render: encode, data: "gestor" },
             { title: "Consultor 1", "class": "col-min", render: encode, data: "consultor" },
             { title: "Consultor 2", "class": "col-min", render: encode, data: "consultor2" },

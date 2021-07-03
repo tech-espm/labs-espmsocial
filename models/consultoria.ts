@@ -15,6 +15,8 @@ export = class Consultoria{
 	public ano: number;
 	public semestre: number;
 
+	public causas: number[];
+
 	private static validar(c: Consultoria): string {
 		if (!c)
 			return "Dados inválidos";
@@ -91,6 +93,21 @@ export = class Consultoria{
 				return "Semestre inválido";
 		}
 
+		if (!c.causas) {
+			c.causas = [];
+		} else {
+			if ((typeof c.causas) === "string" || (typeof c.causas) === "number")
+				c.causas = [ c.causas as any ];
+
+			if (c.causas.length) {
+				for (let i = 0; i < c.causas.length; i++) {
+					c.causas[i] = parseInt(c.causas[i] as any);
+					if (isNaN(c.causas[i]))
+						return "Causa inválida";
+				}
+			}
+		}
+
 		return null;
 	}
 	
@@ -98,20 +115,30 @@ export = class Consultoria{
 		let lista: Consultoria[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = (await sql.query("select c.id, o.nome organizacao, ori.nome orientador, g.nome gestor, co.nome consultor, co2.nome consultor2, co3.nome consultor3, co4.nome consultor4, c.categoria, c.ano, c.semestre, date_format(c.criacao, '%d/%m/%Y') criacao from consultoria c left join organizacao o on o.id = c.idorganizacao left join orientador ori on ori.id = c.idorientador left join usuario g on g.id = c.idgestor left join usuario co on co.id = c.idconsultor left join usuario co2 on co2.id = c.idconsultor2 left join usuario co3 on co3.id = c.idconsultor3 left join usuario co4 on co4.id = c.idconsultor4")) as Consultoria[];
+			lista = (await sql.query("select c.id, o.nome organizacao, ori.nome orientador, g.nome gestor, co.nome consultor, co2.nome consultor2, co3.nome consultor3, co4.nome consultor4, c.categoria, c.ano, c.semestre, date_format(c.criacao, '%d/%m/%Y') criacao, (select GROUP_CONCAT(ca.nome ORDER BY ca.nome ASC SEPARATOR ', ') causas from consultoria_causa cc inner join causa ca on ca.id = cc.idcausa where cc.idconsultoria = c.id) causas from consultoria c left join organizacao o on o.id = c.idorganizacao left join orientador ori on ori.id = c.idorientador left join usuario g on g.id = c.idgestor left join usuario co on co.id = c.idconsultor left join usuario co2 on co2.id = c.idconsultor2 left join usuario co3 on co3.id = c.idconsultor3 left join usuario co4 on co4.id = c.idconsultor4")) as Consultoria[];
 		});
 
 		return lista || [];
     }
     
     public static async obter(id: number): Promise<Consultoria> {
-		let lista: Consultoria[] = null;
+		let consultoria: Consultoria = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select id, idorganizacao, idorientador, idgestor, idconsultor, idconsultor2, idconsultor3, idconsultor4, categoria, ano, semestre from consultoria where id = ?", [id]) as Consultoria[];
+			const lista = (await sql.query("select id, idorganizacao, idorientador, idgestor, idconsultor, idconsultor2, idconsultor3, idconsultor4, categoria, ano, semestre from consultoria where id = ?", [id])) as Consultoria[];
+
+			if (lista && lista[0]) {
+				consultoria = lista[0];
+				consultoria.causas = [];
+				const causas: any[] = await sql.query("select idcausa from consultoria_causa where idconsultoria = ?", [id]);
+				if (causas) {
+					for (let i = 0; i < causas.length; i++)
+						consultoria.causas.push(causas[i].idcausa);
+				}
+			}
 		});
 
-		return ((lista && lista[0]) || null);
+		return consultoria;
     }
 
 
@@ -124,20 +151,29 @@ export = class Consultoria{
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
+				await sql.beginTransaction();
+
 				await sql.query("INSERT INTO consultoria (idorganizacao, idorientador, idgestor, idconsultor, idconsultor2, idconsultor3, idconsultor4, categoria, ano, semestre, criacao) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [c.idorganizacao, c.idorientador, c.idgestor, c.idconsultor, c.idconsultor2, c.idconsultor3, c.idconsultor4, c.categoria, c.ano, c.semestre, DataUtil.hojeISOComHorario()]);
+
+				c.id = await sql.scalar("select last_insert_id()") as number;
+
+				if (c.causas && c.causas.length) {
+					for (let i = 0; i < c.causas.length; i++)
+						await sql.query("insert into consultoria_causa (idconsultoria, idcausa) values (?, ?)", [c.id, c.causas[i]]);
+				}
+
+				await sql.commit();
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {
 						case "ER_NO_REFERENCED_ROW":
 						case "ER_NO_REFERENCED_ROW_2":
-							erro = "Organização ou orientador não encontrado";
-							break;
-						default:
-							throw e;
+							erro = "Organização, orientador ou causa não encontrada";
+							return;
 					}
-				} else {
-					throw e;
 				}
+
+				throw e;
 			}
 		});
 
@@ -153,22 +189,34 @@ export = class Consultoria{
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
+				await sql.beginTransaction();
+
 				await sql.query("update consultoria set idorganizacao = ?, idorientador = ?, idgestor = ?, idconsultor = ?, idconsultor2 = ?, idconsultor3 = ?, idconsultor4 = ?, categoria = ?, ano = ?, semestre = ? where id = ?", [c.idorganizacao, c.idorientador, c.idgestor, c.idconsultor, c.idconsultor2, c.idconsultor3, c.idconsultor4, c.categoria, c.ano, c.semestre, c.id]);
-				if (!sql.linhasAfetadas)
+
+				if (!sql.linhasAfetadas) {
 					erro = "Consultoria não encontrada";
+					return;
+				}
+
+				await sql.query("delete from consultoria_causa where idconsultoria = ?", [c.id]);
+
+				if (c.causas && c.causas.length) {
+					for (let i = 0; i < c.causas.length; i++)
+						await sql.query("insert into consultoria_causa (idconsultoria, idcausa) values (?, ?)", [c.id, c.causas[i]]);
+				}
+
+				await sql.commit();
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {
 						case "ER_NO_REFERENCED_ROW":
 						case "ER_NO_REFERENCED_ROW_2":
-							erro = "Organização ou orientador não encontrado";
-							break;
-						default:
-							throw e;
+							erro = "Organização, orientador ou causa não encontrada";
+							return;
 					}
-				} else {
-					throw e;
 				}
+
+				throw e;
 			}
 		});
 

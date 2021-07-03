@@ -95,7 +95,7 @@ export = class Causa{
 					switch (e.code) {
 						case "ER_ROW_IS_REFERENCED":
 						case "ER_ROW_IS_REFERENCED_2":
-							res = "A causa não pode ser excluída porque pertence a uma ou mais organizações";
+							res = "A causa não pode ser excluída porque pertence a uma ou mais organizações ou consultorias";
 							return;
 					}
 				}
