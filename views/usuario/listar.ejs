@@ -74,8 +74,6 @@
 		export: { title: "<%- (colegiado ? 'Colegiado' : 'Usuários') %>" }
 	});
 
-	var trClicada;
-
 	$("#tabela").on("click", "tbody button", function () {
 		if (JsonWebApi.active)
 			return;
@@ -103,7 +101,7 @@
 				}
 			});
 		} else {
-			Notification.okcancel("Tem certeza que deseja redefinir a senha do usuário " + usuario.nome + " para \"1234\"? Esta operação NÃO pode ser desfeita!", null, true, "Excluir").then(function (result) {
+			Notification.okcancel("Tem certeza que deseja redefinir a senha do usuário " + usuario.nome + " para \"1234\"? Esta operação NÃO pode ser desfeita!").then(function (result) {
 				if (JsonWebApi.active || !trClicada)
 					return;
 

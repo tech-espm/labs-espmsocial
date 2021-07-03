@@ -8,6 +8,9 @@ export = class Consultoria{
 	public idorientador: number;
 	public idgestor: number;
 	public idconsultor: number;
+	public idconsultor2: number;
+	public idconsultor3: number;
+	public idconsultor4: number;
 	public categoria: string;
 	public ano: number;
 	public semestre: number;
@@ -37,13 +40,37 @@ export = class Consultoria{
 		} else {
 			c.idconsultor = parseInt(c.idconsultor as any);
 			if (isNaN(c.idconsultor) || c.idconsultor < 0)
-				return "Consultor inválido";
+				return "Consultor 1 inválido";
+		}
+
+		if (!c.idconsultor2) {
+			c.idconsultor2 = null;
+		} else {
+			c.idconsultor2 = parseInt(c.idconsultor2 as any);
+			if (isNaN(c.idconsultor2) || c.idconsultor2 < 0)
+				return "Consultor 2 inválido";
+		}
+
+		if (!c.idconsultor3) {
+			c.idconsultor3 = null;
+		} else {
+			c.idconsultor3 = parseInt(c.idconsultor3 as any);
+			if (isNaN(c.idconsultor3) || c.idconsultor3 < 0)
+				return "Consultor 3 inválido";
+		}
+
+		if (!c.idconsultor4) {
+			c.idconsultor4 = null;
+		} else {
+			c.idconsultor4 = parseInt(c.idconsultor4 as any);
+			if (isNaN(c.idconsultor4) || c.idconsultor4 < 0)
+				return "Consultor 4 inválido";
 		}
 
 		c.categoria = (c.categoria || "").normalize().trim().toLowerCase();
 		if (c.categoria) {
 			if (c.categoria.length > 100)
-				return "Categoria inválida";
+				return "Observações inválidas";
 		} else {
 			c.categoria = null;
 		}
@@ -71,7 +98,7 @@ export = class Consultoria{
 		let lista: Consultoria[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = (await sql.query("select c.id, o.nome organizacao, ori.nome orientador, g.nome gestor, co.nome consultor, c.categoria, c.ano, c.semestre, date_format(c.criacao, '%d/%m/%Y') criacao from consultoria c left join organizacao o on o.id = c.idorganizacao left join orientador ori on ori.id = c.idorientador left join usuario g on g.id = c.idgestor left join usuario co on co.id = c.idconsultor")) as Consultoria[];
+			lista = (await sql.query("select c.id, o.nome organizacao, ori.nome orientador, g.nome gestor, co.nome consultor, co2.nome consultor2, co3.nome consultor3, co4.nome consultor4, c.categoria, c.ano, c.semestre, date_format(c.criacao, '%d/%m/%Y') criacao from consultoria c left join organizacao o on o.id = c.idorganizacao left join orientador ori on ori.id = c.idorientador left join usuario g on g.id = c.idgestor left join usuario co on co.id = c.idconsultor left join usuario co2 on co2.id = c.idconsultor2 left join usuario co3 on co3.id = c.idconsultor3 left join usuario co4 on co4.id = c.idconsultor4")) as Consultoria[];
 		});
 
 		return lista || [];
@@ -81,7 +108,7 @@ export = class Consultoria{
 		let lista: Consultoria[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select id, idorganizacao, idorientador, idgestor, idconsultor, categoria, ano, semestre from consultoria where id = ?", [id]) as Consultoria[];
+			lista = await sql.query("select id, idorganizacao, idorientador, idgestor, idconsultor, idconsultor2, idconsultor3, idconsultor4, categoria, ano, semestre from consultoria where id = ?", [id]) as Consultoria[];
 		});
 
 		return ((lista && lista[0]) || null);
@@ -97,7 +124,7 @@ export = class Consultoria{
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
-				await sql.query("INSERT INTO consultoria (idorganizacao, idorientador, idgestor, idconsultor, categoria, ano, semestre, criacao) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [c.idorganizacao, c.idorientador, c.idgestor, c.idconsultor, c.categoria, c.ano, c.semestre, DataUtil.hojeISOComHorario()]);
+				await sql.query("INSERT INTO consultoria (idorganizacao, idorientador, idgestor, idconsultor, idconsultor2, idconsultor3, idconsultor4, categoria, ano, semestre, criacao) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [c.idorganizacao, c.idorientador, c.idgestor, c.idconsultor, c.idconsultor2, c.idconsultor3, c.idconsultor4, c.categoria, c.ano, c.semestre, DataUtil.hojeISOComHorario()]);
 			} catch (e) {
 				if (e.code) {
 					switch (e.code) {
@@ -126,7 +153,7 @@ export = class Consultoria{
 
 		await Sql.conectar(async (sql: Sql) => {
 			try {
-				await sql.query("update consultoria set idorganizacao = ?, idorientador = ?, idgestor = ?, idconsultor = ?, categoria = ?, ano = ?, semestre = ? where id = ?", [c.idorganizacao, c.idorientador, c.idgestor, c.idconsultor, c.categoria, c.ano, c.semestre, c.id]);
+				await sql.query("update consultoria set idorganizacao = ?, idorientador = ?, idgestor = ?, idconsultor = ?, idconsultor2 = ?, idconsultor3 = ?, idconsultor4 = ?, categoria = ?, ano = ?, semestre = ? where id = ?", [c.idorganizacao, c.idorientador, c.idgestor, c.idconsultor, c.idconsultor2, c.idconsultor3, c.idconsultor4, c.categoria, c.ano, c.semestre, c.id]);
 				if (!sql.linhasAfetadas)
 					erro = "Consultoria não encontrada";
 			} catch (e) {
